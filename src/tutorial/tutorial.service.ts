@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 export class TutorialService {
   constructor(
     @InjectRepository(Tag)
-    private readonly tagRepository: Repository<Tag>,
+    private tagRepository: Repository<Tag>,
   ) {}
 
   async createTag(name: string): Promise<Tag> {

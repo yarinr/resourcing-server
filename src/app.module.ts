@@ -7,21 +7,20 @@ import { AppService } from './app.service';
 import { TutorialModule } from './tutorial/tutorial.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'resourcing.db',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
-      dropSchema: true,
-    }),
-    GraphQLModule.forRoot({
-      autoSchemaFile: 'schema.gql',
-      debug: true,
-      playground: true,
-    }),
-    TutorialModule,
-  ],
+  // imports: [
+  //   TypeOrmModule.forRoot({
+  //     type: 'sqlite',
+  //     database: 'resourcing.db',
+  //     entities: [__dirname + '/**/*.entity{.ts,.js}'],
+  //     synchronize: true,
+  //   }),
+  //   GraphQLModule.forRoot({
+  //     autoSchemaFile: 'schema.gql',
+  //     debug: true,
+  //     playground: true,
+  //   }),
+  //   TutorialModule,
+  // ],
   controllers: [AppController],
   providers: [AppService],
 })
