@@ -1,5 +1,6 @@
 import { UserService } from './user/user.service';
 import { v4 as uuid } from 'uuid';
+import { TutorialService } from './tutorial/tutorial.service';
 
 export class User {
   constructor(createUserDto: CreateUserDto) {
@@ -31,9 +32,24 @@ export class CreateUserDto {
   mail: string;
 }
 
-export interface Vote {
+export class Vote {
+  constructor(createVoteDto: createVoteDto, userService: UserService) {
+    this.entity = createVoteDto.entity;
+    this.type = createVoteDto.type;
+    this.entityId = createVoteDto.entityId;
+    this.user = userService.getUser(createVoteDto.userId);
+  }
+  user: User;
   entity: 'Comment' | 'Tutorial';
-  typeId: string;
+  entityId: string;
+  type: 'Negative' | 'Positive';
+}
+
+export class createVoteDto {
+  userId: string;
+  entity: 'Comment' | 'Tutorial';
+  entityId: string;
+  tutorialId?: string;
   type: 'Negative' | 'Positive';
 }
 
@@ -77,14 +93,17 @@ export class CreateTutorialDto {
 // Comment
 
 export class Comment {
-  constructor(createCommentDto: CreateCommentDto, userService: UserService) {
+  constructor(
+    createCommentDto: CreateCommentDto,
+    userService: UserService,
+    tutorialService: TutorialService,
+  ) {
     this.id = uuid();
     this.content = createCommentDto.content;
     this.votes = [];
     this.date = new Date();
     this.submmiter = userService.getUser(createCommentDto.userId);
-
-    // this.tutorial = TutorialService.getTutorial(createCommentDto.tutorialId);
+    this.tutorial = tutorialService.getTutorial(createCommentDto.tutorialId);
   }
 
   id: string;
@@ -96,7 +115,6 @@ export class Comment {
 }
 
 export class CreateCommentDto {
-  id: string;
   content: string;
   userId: string;
   tutorialId: string;

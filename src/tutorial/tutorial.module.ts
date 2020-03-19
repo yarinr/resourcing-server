@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { TutorialResolver } from './tutorial.resolver';
+import { UserModule } from '../user/user.module';
+import { TutorialController } from './tutorial.controller';
 import { TutorialService } from './tutorial.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Tag } from './tutorial.entity';
+import { UserService } from 'src/user/user.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Tag])],
-  providers: [TutorialResolver, TutorialService],
+  controllers: [TutorialController],
+  providers: [TutorialService],
 })
 export class TutorialModule {}
