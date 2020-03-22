@@ -1,4 +1,12 @@
-import { Controller, Get, Param, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Body,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { User, CreateUserDTO } from '../entities';
 
@@ -17,7 +25,10 @@ export class UserController {
   }
 
   @Post('register')
-  async create(@Body() createUserDto: CreateUserDTO): Promise<User> {
-    return this.userService.register(createUserDto);
+  @UsePipes(new ValidationPipe())
+  async create(
+    @Body('variables') data: { createUserDto: CreateUserDTO },
+  ): Promise<User> {
+    return this.userService.register(data.createUserDto);
   }
 }

@@ -1,4 +1,13 @@
-import { Controller, Get, Param, Post, Body, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Body,
+  Put,
+  ValidationPipe,
+  UsePipes,
+} from '@nestjs/common';
 import { Tutorial, CreateTutorialDTO, CreateCommentDTO } from '../entities';
 import { TutorialService } from './tutorial.service';
 
@@ -16,33 +25,37 @@ export class TutorialController {
     return this.tutorialService.getTutorial(id);
   }
 
-  @Put('uploadTutorial')
+  @Post('uploadTutorial')
+  @UsePipes(new ValidationPipe())
   async addTutorial(
-    @Body() createTutorialDto: CreateTutorialDTO,
+    @Body('variables') data: { createTutorialDto: CreateTutorialDTO },
   ): Promise<Tutorial> {
-    return this.tutorialService.addTutorial(createTutorialDto);
+    return await this.tutorialService.addTutorial(data.createTutorialDto);
   }
 
   @Put('newComment')
+  @UsePipes(new ValidationPipe())
   async addComment(
-    @Body() createCommentDto: CreateCommentDTO,
+    @Body('variables') data: { createCommentDto: CreateCommentDTO },
   ): Promise<Tutorial> {
-    return this.tutorialService.addComment(createCommentDto);
+    return this.tutorialService.addComment(data.createCommentDto);
   }
 
   @Put(':id/upvote')
+  @UsePipes(new ValidationPipe())
   async upvoteTutorial(
     @Param('id') id: string,
-    @Body() userId: string,
+    @Body('variables') data: { userId: string },
   ): Promise<Tutorial> {
-    return this.tutorialService.upvote(id, userId);
+    return this.tutorialService.upvote(id, data.userId);
   }
 
   @Put(':id/downvote')
+  @UsePipes(new ValidationPipe())
   async downvoteTutorial(
     @Param('id') id: string,
-    @Body() userId: string,
+    @Body('variables') data: { userId: string },
   ): Promise<Tutorial> {
-    return this.tutorialService.downvote(id, userId);
+    return this.tutorialService.downvote(id, data.userId);
   }
 }

@@ -1,4 +1,5 @@
 import { v4 as uuid } from 'uuid';
+import { IsNotEmpty, IsEmail, IsUrl, IsArray } from 'class-validator';
 
 export class User {
   constructor(createUserDto: CreateUserDTO) {
@@ -22,9 +23,13 @@ export class User {
 }
 
 export class CreateUserDTO {
+  @IsNotEmpty()
   id: string;
+  @IsNotEmpty()
   name: string;
+  @IsNotEmpty()
   userName: string;
+  @IsEmail()
   mail: string;
 }
 
@@ -59,10 +64,16 @@ export class Tutorial {
 }
 
 export class CreateTutorialDTO {
+  @IsNotEmpty()
   name: string;
+  @IsNotEmpty()
   description: string;
+  @IsUrl()
   url: string;
+  @IsNotEmpty()
   userId: string;
+  @IsNotEmpty()
+  @IsArray()
   tagIds: string[];
 }
 
@@ -87,8 +98,11 @@ export class Comment {
 }
 
 export class CreateCommentDTO {
+  @IsNotEmpty()
   content: string;
+  @IsNotEmpty()
   userId: string;
+  @IsNotEmpty()
   tutorialId: string;
 }
 
@@ -115,7 +129,10 @@ export class Topic {
 }
 
 export class CreateTopicDTO {
+  @IsNotEmpty()
   name: string;
+  @IsNotEmpty()
   icon: string;
+  @IsNotEmpty()
   categoryId: string;
 }
