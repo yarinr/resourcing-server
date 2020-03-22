@@ -1,10 +1,5 @@
 import { Controller, Get, Param, Post, Body, Put } from '@nestjs/common';
-import {
-  Tutorial,
-  CreateTutorialDto,
-  createVoteDto,
-  CreateCommentDto,
-} from '../entities';
+import { Tutorial, CreateTutorialDTO, CreateCommentDTO } from '../entities';
 import { TutorialService } from './tutorial.service';
 
 @Controller('tutorials')
@@ -21,16 +16,16 @@ export class TutorialController {
     return this.tutorialService.getTutorial(id);
   }
 
-  @Put('newTutorial')
+  @Put('uploadTutorial')
   async addTutorial(
-    @Body() createTutorialDto: CreateTutorialDto,
+    @Body() createTutorialDto: CreateTutorialDTO,
   ): Promise<Tutorial> {
     return this.tutorialService.addTutorial(createTutorialDto);
   }
 
   @Put('newComment')
   async addComment(
-    @Body() createCommentDto: CreateCommentDto,
+    @Body() createCommentDto: CreateCommentDTO,
   ): Promise<Tutorial> {
     return this.tutorialService.addComment(createCommentDto);
   }
@@ -40,13 +35,7 @@ export class TutorialController {
     @Param('id') id: string,
     @Body() userId: string,
   ): Promise<Tutorial> {
-    const voteDto: createVoteDto = {
-      userId: userId,
-      entity: 'Tutorial',
-      entityId: id,
-      type: 'Positive',
-    };
-    return this.tutorialService.vote(voteDto);
+    return this.tutorialService.upvote(id, userId);
   }
 
   @Put(':id/downvote')
@@ -54,44 +43,6 @@ export class TutorialController {
     @Param('id') id: string,
     @Body() userId: string,
   ): Promise<Tutorial> {
-    const voteDto: createVoteDto = {
-      userId: userId,
-      entity: 'Tutorial',
-      entityId: id,
-      type: 'Negative',
-    };
-    return this.tutorialService.vote(voteDto);
-  }
-
-  @Put(':id/:commentId/upvote')
-  async upvoteComment(
-    @Param('id') tutorialId: string,
-    @Body() userId: string,
-    @Body() commentId: string,
-  ): Promise<Tutorial> {
-    const voteDto: createVoteDto = {
-      userId: userId,
-      entity: 'Comment',
-      entityId: commentId,
-      tutorialId: tutorialId,
-      type: 'Positive',
-    };
-    return this.tutorialService.vote(voteDto);
-  }
-
-  @Put(':id/downvote')
-  async downvoteComment(
-    @Param('id') tutorialId: string,
-    @Body() userId: string,
-    @Body() commentId: string,
-  ): Promise<Tutorial> {
-    const voteDto: createVoteDto = {
-      userId: userId,
-      entity: 'Tutorial',
-      entityId: commentId,
-      tutorialId: tutorialId,
-      type: 'Negative',
-    };
-    return this.tutorialService.vote(voteDto);
+    return this.tutorialService.downvote(id, userId);
   }
 }

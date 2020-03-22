@@ -7,18 +7,16 @@ import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import {
   Tutorial,
-  CreateTutorialDto,
-  CreateCommentDto,
+  CreateTutorialDTO,
+  CreateCommentDTO,
   Comment,
-  createVoteDto,
-  Vote,
 } from '../entities';
 import { UserService } from 'src/user/user.service';
 >>>>>>> 88a59f9... deleted db related stuff & module imports needs to fixed + tutorial.controller.spec.ts needs to be added
 
 @Injectable()
 export class TutorialService {
-  public tutorials: Tutorial[];
+  public tutorials: Tutorial[] = [];
 
 <<<<<<< HEAD
   async createTag(name: string): Promise<Tag> {
@@ -26,26 +24,28 @@ export class TutorialService {
     return this.tagRepository.save(tag);
 =======
   constructor(private userService: UserService) {
-    const createTutorial: CreateTutorialDto = {
+    const createTutorial: CreateTutorialDTO = {
       description: 'learn python quickly',
       name: 'python4beginners',
       url: 'https://www.python.org/about/gettingstarted/',
       userId: '206531741',
-      tagIds: ['1'],
+      tagIds: ['tagId1'],
     };
-    this.tutorials.push(new Tutorial(createTutorial, userService));
+    const newTutorial = new Tutorial(createTutorial);
+    this.userService.addTutorial(createTutorial.userId, newTutorial.id);
+    this.tutorials.push(newTutorial);
   }
 
   getTutorial(id: string): Tutorial {
     return this.tutorials.find(tutorial => tutorial.id === id);
   }
 
-  addComment(createComment: CreateCommentDto): Tutorial {
-    const newComment = new Comment(createComment, this.userService, this);
-    const updatedTutorial: Tutorial = this.tutorials.find(
-      tutorial => tutorial.id === createComment.tutorialId,
+  addComment(createComment: CreateCommentDTO): Tutorial {
+    const updatedTutorial: Tutorial = this.getTutorial(
+      createComment.tutorialId,
     );
-    updatedTutorial.comments.push(newComment);
+    const newComment = new Comment(createComment);
+    updatedTutorial.commentIds.push(newComment.id);
     const tutorialArray: Tutorial[] = this.tutorials.filter(
       tutorial => tutorial.id !== createComment.tutorialId,
     );
@@ -54,55 +54,77 @@ export class TutorialService {
     return updatedTutorial;
   }
 
-  vote(createVote: createVoteDto): Tutorial {
-    switch (createVote.entity) {
-      case 'Comment':
-        const updatedTutorial: Tutorial = this.tutorials.find(
-          tutorial => tutorial.id === createVote.tutorialId,
-        );
-        const updatedEntity = updatedTutorial.comments.find(
-          comment => comment.id === createVote.entityId,
-        );
-        updatedEntity.votes.push(new Vote(createVote, this.userService));
-        const updatedComments: Comment[] = updatedTutorial.comments.filter(
-          comment => comment.id !== createVote.entityId,
-        );
-        updatedComments.push(updatedEntity);
-        updatedTutorial.comments = updatedComments;
-        const tutorialArray: Tutorial[] = this.tutorials.filter(
-          tutorial => tutorial.id !== createVote.tutorialId,
-        );
-        tutorialArray.push(updatedTutorial);
-        this.tutorials = tutorialArray;
-        return updatedTutorial;
-      case 'Tutorial':
-        const updatedTuto: Tutorial = this.tutorials.find(
-          tutorial => tutorial.id === createVote.entityId,
-        );
-        updatedTuto.votes.push(new Vote(createVote, this.userService));
-        const tutorialArr: Tutorial[] = this.tutorials.filter(
-          tutorial => tutorial.id !== createVote.tutorialId,
-        );
-        tutorialArr.push(updatedTuto);
-        this.tutorials = tutorialArr;
-        return updatedTuto;
-      default:
+  deleteComment(commentId: string, tutorialId: string): Tutorial {
+    const updatedTutorial: Tutorial = this.getTutorial(tutorialId);
+    updatedTutorial.commentIds = updatedTutorial.commentIds.filter(
+      comment => comment !== commentId,
+    );
+    const tutorialArray: Tutorial[] = this.tutorials.filter(
+      tutorial => tutorial.id !== tutorialId,
+    );
+    tutorialArray.push(updatedTutorial);
+    this.tutorials = tutorialArray;
+    return updatedTutorial;
+  }
+
+  upvote(tutorialId: string, userId: string): Tutorial {
+    const updatedTutorial: Tutorial = this.getTutorial(tutorialId);
+    if (updatedTutorial.downvotes.includes(userId)) {
+      console.log('a user cannot vote twice to the same tutorial');
+      return updatedTutorial;
     }
+
+    if (updatedTutorial.upvotes.includes(userId)) {
+      updatedTutorial.upvotes = updatedTutorial.upvotes.filter(
+        user => user !== userId,
+      );
+    } else {
+      updatedTutorial.upvotes.push(userId);
+    }
+
+    const tutorialArray: Tutorial[] = this.tutorials.filter(
+      tutorial => tutorial.id !== tutorialId,
+    );
+    tutorialArray.push(updatedTutorial);
+    this.tutorials = tutorialArray;
+    return updatedTutorial;
+  }
+
+  downvote(tutorialId: string, userId: string): Tutorial {
+    const updatedTutorial: Tutorial = this.getTutorial(tutorialId);
+    if (
+      updatedTutorial.downvotes.includes(userId) ||
+      updatedTutorial.upvotes.includes(userId)
+    ) {
+      console.log('a user cannot vote twice to the same tutorial');
+      return updatedTutorial;
+    }
+
+    if (updatedTutorial.downvotes.includes(userId)) {
+      updatedTutorial.downvotes = updatedTutorial.downvotes.filter(
+        user => user !== userId,
+      );
+    } else {
+      updatedTutorial.downvotes.push(userId);
+    }
+
+    const tutorialArray: Tutorial[] = this.tutorials.filter(
+      tutorial => tutorial.id !== tutorialId,
+    );
+    tutorialArray.push(updatedTutorial);
+    this.tutorials = tutorialArray;
+    return updatedTutorial;
   }
 
   deleteTutorial(id: string): Tutorial {
-    const removedTutorial: Tutorial = this.tutorials.find(
-      tutorial => tutorial.id === id,
-    );
+    const removedTutorial: Tutorial = this.getTutorial(id);
+    this.userService.deleteTutorial(removedTutorial.submitterId, id);
     this.tutorials = this.tutorials.filter(tutorial => tutorial.id !== id);
     return removedTutorial;
   }
 
-  addTutorial(createTutorial: CreateTutorialDto): Tutorial {
-    const newTutorial: Tutorial = new Tutorial(
-      createTutorial,
-      this.userService,
-    );
+  addTutorial(createTutorial: CreateTutorialDTO): Tutorial {
+    const newTutorial: Tutorial = new Tutorial(createTutorial);
     this.userService.addTutorial(createTutorial.userId, newTutorial.id);
     this.tutorials.push(newTutorial);
     return newTutorial;

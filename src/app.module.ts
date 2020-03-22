@@ -19,6 +19,7 @@ import { TutorialModule } from './tutorial/tutorial.module';
     //   }),
     //   TutorialModule,
     UserModule,
+    TutorialModule,
   ],
   controllers: [AppController],
   providers: [AppService],

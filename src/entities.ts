@@ -1,71 +1,46 @@
-import { UserService } from './user/user.service';
 import { v4 as uuid } from 'uuid';
-import { TutorialService } from './tutorial/tutorial.service';
 
 export class User {
-  constructor(createUserDto: CreateUserDto) {
+  constructor(createUserDto: CreateUserDTO) {
     this.id = createUserDto.id;
     this.name = createUserDto.name;
     this.userName = createUserDto.userName;
     this.mail = createUserDto.mail;
     this.points = 0;
-    this.tutorials = [];
-    this.bookmarks = [];
-    this.votes = [];
+    this.tutorialIds = [];
+    this.bookmarkIds = [];
   }
 
   id: string;
   name: string;
   userName: string;
   mail: string;
-  // sum of upvotes from uploaded tutorials & upvotes he got from useful comments he wrote
+  // sum of upvotes from uploaded tutorials
   points: number;
-  tutorials: Tutorial[];
-  bookmarks: Tutorial[];
-  votes: Vote[];
+  tutorialIds: string[];
+  bookmarkIds: string[];
 }
 
-export class CreateUserDto {
+export class CreateUserDTO {
   id: string;
   name: string;
   userName: string;
   mail: string;
-}
-
-export class Vote {
-  constructor(createVoteDto: createVoteDto, userService: UserService) {
-    this.entity = createVoteDto.entity;
-    this.type = createVoteDto.type;
-    this.entityId = createVoteDto.entityId;
-    this.user = userService.getUser(createVoteDto.userId);
-  }
-  user: User;
-  entity: 'Comment' | 'Tutorial';
-  entityId: string;
-  type: 'Negative' | 'Positive';
-}
-
-export class createVoteDto {
-  userId: string;
-  entity: 'Comment' | 'Tutorial';
-  entityId: string;
-  tutorialId?: string;
-  type: 'Negative' | 'Positive';
 }
 
 // Tutorial
 
 export class Tutorial {
-  constructor(createTutorialDto: CreateTutorialDto, userService: UserService) {
+  constructor(createTutorialDto: CreateTutorialDTO) {
     this.id = uuid();
     this.name = createTutorialDto.name;
     this.description = createTutorialDto.description;
     this.url = createTutorialDto.url;
-    this.submitter = userService.getUser(createTutorialDto.userId);
-    // this.tags = this.topicService.getTopicsByIds(createTutorialDto.tagIds);
-    this.tags = [];
-    this.votes = [];
-    this.comments = [];
+    this.submitterId = createTutorialDto.userId;
+    this.tagIds = createTutorialDto.tagIds;
+    this.upvotes = [];
+    this.downvotes = [];
+    this.commentIds = [];
     this.date = new Date();
     this.views = 0;
   }
@@ -74,15 +49,16 @@ export class Tutorial {
   name: string;
   description: string;
   url: string;
-  submitter: User;
-  votes: Vote[];
-  comments: Comment[];
+  submitterId: string;
+  upvotes: string[];
+  downvotes: string[];
+  commentIds: string[];
   date: Date;
-  tags: Topic[];
+  tagIds: string[];
   views: number;
 }
 
-export class CreateTutorialDto {
+export class CreateTutorialDTO {
   name: string;
   description: string;
   url: string;
@@ -93,28 +69,24 @@ export class CreateTutorialDto {
 // Comment
 
 export class Comment {
-  constructor(
-    createCommentDto: CreateCommentDto,
-    userService: UserService,
-    tutorialService: TutorialService,
-  ) {
+  constructor(createCommentDto: CreateCommentDTO) {
     this.id = uuid();
     this.content = createCommentDto.content;
     this.votes = [];
     this.date = new Date();
-    this.submmiter = userService.getUser(createCommentDto.userId);
-    this.tutorial = tutorialService.getTutorial(createCommentDto.tutorialId);
+    this.submmiterId = createCommentDto.userId;
+    this.tutorialId = createCommentDto.tutorialId;
   }
 
   id: string;
   date: Date;
   content: string;
-  votes: Vote[];
-  submmiter: User;
-  tutorial: Tutorial;
+  votes: string[];
+  submmiterId: string;
+  tutorialId: string;
 }
 
-export class CreateCommentDto {
+export class CreateCommentDTO {
   content: string;
   userId: string;
   tutorialId: string;
@@ -129,20 +101,20 @@ export class Category {
 }
 
 export class Topic {
-  constructor(createTopicDto: CreateTopicDto) {
+  constructor(createTopicDto: CreateTopicDTO) {
     this.id = uuid();
     this.name = createTopicDto.name;
     this.icon = createTopicDto.icon;
-    // this.category = categoryService.getCategory(createTopicDto.categoryId);
+    this.categoryId = createTopicDto.categoryId;
   }
 
   id: string;
   name: string;
   icon: string;
-  category: Category;
+  categoryId: string;
 }
 
-export class CreateTopicDto {
+export class CreateTopicDTO {
   name: string;
   icon: string;
   categoryId: string;

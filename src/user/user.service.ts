@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User, CreateUserDto, Tutorial } from '../entities';
-import { TutorialService } from 'src/tutorial/tutorial.service';
+import { User, CreateUserDTO, Tutorial } from '../entities';
 
 @Injectable()
 export class UserService {
@@ -11,43 +10,58 @@ export class UserService {
       userName: 'ofir_cohen',
       mail: 'ofir2161324@gmail.com',
       points: 0,
-      tutorials: [],
-      bookmarks: [],
-      votes: [],
+      tutorialIds: [],
+      bookmarkIds: [],
     },
   ];
 
-  constructor(private tutorialService: TutorialService) {}
+  constructor() {}
 
   getUser(id: string): User {
     return this.users.find(user => user.id === id);
   }
 
   deleteUser(id: string): User {
-    const removedUser: User = this.users.find(user => user.id === id);
+    const removedUser: User = this.getUser(id);
     this.users = this.users.filter(user => user.id !== id);
     return removedUser;
   }
 
-  addUser(createUser: CreateUserDto): User {
+  register(createUser: CreateUserDTO): User {
     let newUser = new User(createUser);
     this.users.push(newUser);
     return newUser;
   }
 
-  addBookmark(userId: string, tutorialId: string): Tutorial {
-    const tutorial = this.tutorialService.getTutorial(tutorialId);
+  addBookmark(userId: string, tutorialId: string): User {
     const updatedUser: User = this.deleteUser(userId);
-    updatedUser.bookmarks.push(tutorial);
+    updatedUser.bookmarkIds.push(tutorialId);
     this.users.push(updatedUser);
-    return tutorial;
+    return updatedUser;
   }
 
-  addTutorial(userId: string, tutorialId: string): Tutorial {
-    const tutorial = this.tutorialService.getTutorial(tutorialId);
+  deleteBookmark(userId: string, tutorialId: string): User {
     const updatedUser: User = this.deleteUser(userId);
-    updatedUser.tutorials.push(tutorial);
+    updatedUser.bookmarkIds = updatedUser.bookmarkIds.filter(
+      tutorial => tutorial !== tutorialId,
+    );
     this.users.push(updatedUser);
-    return tutorial;
+    return updatedUser;
+  }
+
+  addTutorial(userId: string, tutorialId: string): User {
+    const updatedUser: User = this.deleteUser(userId);
+    updatedUser.tutorialIds.push(tutorialId);
+    this.users.push(updatedUser);
+    return updatedUser;
+  }
+
+  deleteTutorial(userId: string, tutorialId: string): User {
+    const updatedUser: User = this.deleteUser(userId);
+    updatedUser.tutorialIds = updatedUser.tutorialIds.filter(
+      tutorial => tutorial !== tutorialId,
+    );
+    this.users.push(updatedUser);
+    return updatedUser;
   }
 }
