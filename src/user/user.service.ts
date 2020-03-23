@@ -1,21 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { User, CreateUserDTO, Tutorial } from '../entities';
+import { User, CreateUserDTO } from '../entities';
 
 @Injectable()
 export class UserService {
-  public users: User[] = [
-    {
+  public users: User[] = [];
+
+  constructor() {
+    const newUser: User = new User({
       id: '206531741',
       name: 'ofir cohen',
       userName: 'ofir_cohen',
       mail: 'ofir2161324@gmail.com',
-      points: 0,
-      tutorialIds: [],
-      bookmarkIds: [],
-    },
-  ];
-
-  constructor() {}
+    });
+    this.users.push(newUser);
+  }
 
   getUser(id: string): User {
     return this.users.find(user => user.id === id);
@@ -50,9 +48,12 @@ export class UserService {
   }
 
   addTutorial(userId: string, tutorialId: string): User {
-    const updatedUser: User = this.deleteUser(userId);
+    const updatedUser: User = this.getUser(userId);
+    this.users = this.users.filter(user => user.id !== userId);
     updatedUser.tutorialIds.push(tutorialId);
+    console.log(this.users);
     this.users.push(updatedUser);
+    console.log(this.users);
     return updatedUser;
   }
 

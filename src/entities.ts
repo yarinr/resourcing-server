@@ -35,6 +35,12 @@ export class CreateUserDTO {
 
 // Tutorial
 
+export enum ApprovalStatus {
+  Approved = 'approved',
+  Rejected = 'rejected',
+  Pending = 'pending',
+}
+
 export class Tutorial {
   constructor(createTutorialDto: CreateTutorialDTO) {
     this.id = uuid();
@@ -48,6 +54,7 @@ export class Tutorial {
     this.commentIds = [];
     this.date = new Date();
     this.views = 0;
+    this.status = ApprovalStatus.Pending;
   }
 
   id: string;
@@ -61,6 +68,7 @@ export class Tutorial {
   date: Date;
   tagIds: string[];
   views: number;
+  status: ApprovalStatus;
 }
 
 export class CreateTutorialDTO {
@@ -109,23 +117,29 @@ export class CreateCommentDTO {
 // Category & Topic
 
 export class Category {
-  id: string;
-  name: string;
+  name: CategoryName;
   icon: string;
 }
 
+export enum CategoryName {
+  Programming = 'programming',
+  Design = 'design',
+  DevOps = 'devOps',
+}
 export class Topic {
   constructor(createTopicDto: CreateTopicDTO) {
     this.id = uuid();
     this.name = createTopicDto.name;
     this.icon = createTopicDto.icon;
     this.categoryId = createTopicDto.categoryId;
+    this.status = ApprovalStatus.Pending;
   }
 
   id: string;
   name: string;
   icon: string;
-  categoryId: string;
+  categoryId: CategoryName;
+  status: ApprovalStatus;
 }
 
 export class CreateTopicDTO {
@@ -134,5 +148,5 @@ export class CreateTopicDTO {
   @IsNotEmpty()
   icon: string;
   @IsNotEmpty()
-  categoryId: string;
+  categoryId: CategoryName;
 }

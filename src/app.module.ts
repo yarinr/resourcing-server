@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { TutorialModule } from './tutorial/tutorial.module';
+import { TopicModule } from './topic/topic.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { TutorialModule } from './tutorial/tutorial.module';
     //   TutorialModule,
     UserModule,
     TutorialModule,
+    TopicModule,
   ],
   controllers: [AppController],
   providers: [AppService],
