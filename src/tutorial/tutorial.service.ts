@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import { Injectable, Options } from '@nestjs/common';
-import { Tag } from './tutorial.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-=======
 import { Injectable } from '@nestjs/common';
 import {
   Tutorial,
@@ -12,18 +6,19 @@ import {
   Comment,
 } from '../entities';
 import { UserService } from 'src/user/user.service';
->>>>>>> 88a59f9... deleted db related stuff & module imports needs to fixed + tutorial.controller.spec.ts needs to be added
+import { Tag } from './tutorial.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class TutorialService {
   public tutorials: Tutorial[] = [];
 
-<<<<<<< HEAD
-  async createTag(name: string): Promise<Tag> {
-    const tag = new Tag(name);
-    return this.tagRepository.save(tag);
-=======
-  constructor(private userService: UserService) {
+  constructor(
+    @InjectRepository(Tag)
+    private readonly tagRepository: Repository<Tag>,
+    private readonly userService: UserService,
+  ) {
     const createTutorial: CreateTutorialDTO = {
       description: 'learn python quickly',
       name: 'python4beginners',
@@ -34,6 +29,16 @@ export class TutorialService {
     const newTutorial = new Tutorial(createTutorial);
     this.userService.addTutorial(createTutorial.userId, newTutorial.id);
     this.tutorials.push(newTutorial);
+  }
+
+  async createTag(name: string): Promise<Tag> {
+    const tag = new Tag(name);
+    return this.tagRepository.save(tag);
+  }
+
+  async getAllTags(name: string): Promise<Tag[]> {
+    const tag = new Tag(name);
+    return this.tagRepository.find();
   }
 
   getTutorial(id: string): Tutorial {
@@ -128,7 +133,6 @@ export class TutorialService {
     this.userService.addTutorial(createTutorial.userId, newTutorial.id);
     this.tutorials.push(newTutorial);
     return newTutorial;
->>>>>>> 88a59f9... deleted db related stuff & module imports needs to fixed + tutorial.controller.spec.ts needs to be added
   }
 
   async getAllTags(name: string): Promise<Tag[]> {

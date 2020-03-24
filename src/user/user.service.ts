@@ -51,9 +51,7 @@ export class UserService {
     const updatedUser: User = this.getUser(userId);
     this.users = this.users.filter(user => user.id !== userId);
     updatedUser.tutorialIds.push(tutorialId);
-    console.log(this.users);
     this.users.push(updatedUser);
-    console.log(this.users);
     return updatedUser;
   }
 
