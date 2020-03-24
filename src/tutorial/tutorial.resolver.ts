@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { Arg } from 'type-graphql';
 
-import { User, Tutorial, Tag } from './tutorial.entity';
+import { User, Tutorial, Topic, Category } from '../all-entities.entity';
 import { TutorialService } from './tutorial.service';
 
 @Resolver()
@@ -21,21 +21,5 @@ export class TutorialResolver {
   @Query(returns => Tutorial)
   async tutorial() {
     return [];
-  }
-
-  @Query(returns => [Tutorial])
-  async tutorialsByTag(@Arg('tag') tag: string) {
-    return [];
-  }
-
-  @Query(returns => [Tag])
-  async tags() {
-    const tag = await this.tutorialService.getAllTags('amir');
-    return tag;
-  }
-
-  @Mutation(() => Tag)
-  async createTag(@Args('name') name: string) {
-    return await this.tutorialService.createTag(name);
   }
 }

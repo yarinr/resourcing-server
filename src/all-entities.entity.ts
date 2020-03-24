@@ -11,41 +11,11 @@ import {
 } from 'typeorm';
 import { Field, ID, ObjectType, registerEnumType, Int } from 'type-graphql';
 
-@ObjectType()
-@Entity()
-export class User {
-  @Field(type => ID)
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Field(type => [Tutorial])
-  @OneToMany(
-    type => Tutorial,
-    tutorial => tutorial.user,
-  )
-  tutorials: Tutorial[];
-
-  @Field(type => [Comment])
-  @OneToMany(
-    type => Comment,
-    comment => comment.user,
-  )
-  comments: Comment[];
-
-  @Field(type => [Vote])
-  @OneToMany(
-    type => Vote,
-    vote => vote.user,
-  )
-  votes: Vote[];
-
-  @Field(type => [Report])
-  @OneToMany(
-    type => Report,
-    report => report.user,
-  )
-  reports: Report[];
+export enum VoteType {
+  Upvote = 'upvote',
+  Downvote = 'downvote',
 }
+registerEnumType(VoteType, { name: 'VoteType' });
 
 export enum ApprovalStatus {
   Approved = 'approved',
@@ -53,6 +23,64 @@ export enum ApprovalStatus {
   Pending = 'pending',
 }
 registerEnumType(ApprovalStatus, { name: 'ApprovalStatus' });
+
+export enum Category {
+  PROGRAMMING = 'programming',
+  DEVOPS = 'devops',
+  DESIGN = 'design',
+}
+registerEnumType(Category, { name: 'Category' });
+
+@ObjectType()
+@Entity()
+export class User {
+  @Field(type => ID)
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Field(type => String)
+  @Column()
+  name: string;
+
+  @Field(type => String)
+  @Column()
+  userName: string;
+
+  @Field(type => String)
+  @Column()
+  mail: string;
+
+  @Field(type => [Tutorial], { nullable: true })
+  @OneToMany(
+    type => Tutorial,
+    tutorial => tutorial.user,
+  )
+  tutorials?: Tutorial[];
+
+  @Field(type => [Comment], { nullable: true })
+  @OneToMany(
+    type => Comment,
+    comment => comment.user,
+  )
+  comments?: Comment[];
+
+  @Field(type => [Tutorial], { nullable: true })
+  @ManyToMany(
+    type => Tutorial,
+    tutorial => tutorial.id,
+  )
+  bookmarks?: Tutorial[];
+
+  @Field(type => [Vote], { nullable: true })
+  @OneToMany(
+    type => Vote,
+    vote => vote.user,
+  )
+  votes?: Vote[];
+
+  @Field(type => Int)
+  score: number;
+}
 
 // tslint:disable-next-line: max-classes-per-file
 @ObjectType()
@@ -78,29 +106,26 @@ export class Tutorial {
   @CreateDateColumn()
   submittedAt: Date;
 
-  @Field(type => [Comment])
+  @Field(type => [Comment], { nullable: true })
   @OneToMany(
     type => Comment,
     comment => comment.tutorial,
   )
-  comments: Comment[];
+  comments?: Comment[];
 
-  @Field(type => [Report])
-  @OneToMany(
-    type => Report,
-    report => report.tutorial,
-  )
-  reports: Report[];
-
-  @Field(type => [Vote])
+  @Field(type => [Vote], { nullable: true })
   @OneToMany(
     type => Vote,
     vote => vote.tutorial,
   )
-  votes: Vote[];
+  votes?: Vote[];
 
   @Field(type => Int)
   score: number;
+
+  @Field(type => Int)
+  @Column()
+  views: number;
 
   @Field(type => User)
   @ManyToOne(
@@ -109,13 +134,13 @@ export class Tutorial {
   )
   user: User;
 
-  @Field(type => [Tag])
+  @Field(type => [Topic])
   @ManyToMany(
-    type => Tag,
+    type => Topic,
     tag => tag.tutorials,
   )
   @JoinTable()
-  tags: Tag[];
+  tags: Topic[];
 
   @Field(type => ApprovalStatus)
   @Column({ type: 'simple-enum', enum: ApprovalStatus })
@@ -156,62 +181,36 @@ export class Comment {
 // tslint:disable-next-line: max-classes-per-file
 @ObjectType()
 @Entity()
-export class Tag {
+export class Topic {
   @Field()
   @PrimaryColumn()
   name: string;
-  constructor(name: string) {
+  constructor(name: string, icon: string, category: Category) {
     this.name = name;
+    this.icon = icon;
+    this.category = category;
+    this.approvalStatusCode = ApprovalStatus.Pending;
   }
 
-  @Field(type => [Tutorial])
+  @Field()
+  @Column()
+  icon: string;
+
+  @Field(type => Category)
+  @Column({ type: 'simple-enum', enum: Category })
+  category: Category;
+
+  @Field(type => [Tutorial, { nullable: true }], { nullable: true })
   @ManyToMany(
     type => Tutorial,
     tutorial => tutorial.tags,
   )
-  tutorials: Tutorial[];
+  tutorials?: Tutorial[];
+
+  @Field(type => ApprovalStatus)
+  @Column({ type: 'simple-enum', enum: ApprovalStatus })
+  approvalStatusCode: string;
 }
-
-// tslint:disable-next-line: max-classes-per-file
-@ObjectType()
-@Entity()
-export class Report {
-  @Field(type => ID)
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Field(type => User)
-  @ManyToOne(
-    type => User,
-    user => user.reports,
-  )
-  user: User;
-
-  @Field(type => Tutorial)
-  @OneToMany(
-    type => Tutorial,
-    tutorial => tutorial.reports,
-  )
-  tutorial: Tutorial;
-
-  @Field()
-  @Column()
-  content: string;
-
-  @Field()
-  @Column()
-  isResolved: boolean;
-
-  @Field()
-  @CreateDateColumn()
-  reportedAt: Date;
-}
-
-export enum VoteType {
-  Upvote = 'upvote',
-  Downvote = 'downvote',
-}
-registerEnumType(VoteType, { name: 'VoteType' });
 
 // tslint:disable-next-line: max-classes-per-file
 @ObjectType()

@@ -3,12 +3,11 @@ import { UserModule } from '../user/user.module';
 import { TutorialService } from './tutorial.service';
 import { UserService } from 'src/user/user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Tag } from './tutorial.entity';
+import { Tutorial } from '../all-entities.entity';
 import { TutorialResolver } from './tutorial.resolver';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Tag]), UserModule],
-  // controllers: [TutorialController],
+  imports: [TypeOrmModule.forFeature([Tutorial]), UserModule],
   providers: [TutorialService, UserService, TutorialResolver],
   exports: [TutorialService],
 })

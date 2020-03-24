@@ -1,142 +1,119 @@
 import { Injectable } from '@nestjs/common';
-import {
-  Tutorial,
-  CreateTutorialDTO,
-  CreateCommentDTO,
-  Comment,
-} from '../entities';
 import { UserService } from 'src/user/user.service';
-import { Tag } from './tutorial.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Tutorial } from 'src/all-entities.entity';
 
 @Injectable()
 export class TutorialService {
-  public tutorials: Tutorial[] = [];
-
   constructor(
-    @InjectRepository(Tag)
-    private readonly tagRepository: Repository<Tag>,
+    @InjectRepository(Tutorial)
+    private readonly tutorialRepository: Repository<Tutorial>,
     private readonly userService: UserService,
   ) {
-    const createTutorial: CreateTutorialDTO = {
-      description: 'learn python quickly',
-      name: 'python4beginners',
-      url: 'https://www.python.org/about/gettingstarted/',
-      userId: '206531741',
-      tagIds: ['tagId1'],
-    };
-    const newTutorial = new Tutorial(createTutorial);
-    this.userService.addTutorial(createTutorial.userId, newTutorial.id);
-    this.tutorials.push(newTutorial);
+    // const createTutorial: CreateTutorialDTO = {
+    //   description: 'learn python quickly',
+    //   name: 'python4beginners',
+    //   url: 'https://www.python.org/about/gettingstarted/',
+    //   userId: '206531741',
+    //   tagIds: ['tagId1'],
+    // };
+    // const newTutorial = new Tutorial(createTutorial);
+    // this.userService.addTutorial(createTutorial.userId, newTutorial.id);
+    // this.tutorials.push(newTutorial);
   }
 
-  async createTag(name: string): Promise<Tag> {
-    const tag = new Tag(name);
-    return this.tagRepository.save(tag);
-  }
+  // getTutorial(id: string): Tutorial {
+  //   return this.tutorials.find(tutorial => tutorial.id === id);
+  // }
 
-  async getAllTags(name: string): Promise<Tag[]> {
-    const tag = new Tag(name);
-    return this.tagRepository.find();
-  }
+  // addComment(createComment: CreateCommentDTO): Tutorial {
+  //   const updatedTutorial: Tutorial = this.getTutorial(
+  //     createComment.tutorialId,
+  //   );
+  //   const newComment = new Comment(createComment);
+  //   updatedTutorial.commentIds.push(newComment.id);
+  //   const tutorialArray: Tutorial[] = this.tutorials.filter(
+  //     tutorial => tutorial.id !== createComment.tutorialId,
+  //   );
+  //   tutorialArray.push(updatedTutorial);
+  //   this.tutorials = tutorialArray;
+  //   return updatedTutorial;
+  // }
 
-  getTutorial(id: string): Tutorial {
-    return this.tutorials.find(tutorial => tutorial.id === id);
-  }
+  // deleteComment(commentId: string, tutorialId: string): Tutorial {
+  //   const updatedTutorial: Tutorial = this.getTutorial(tutorialId);
+  //   updatedTutorial.commentIds = updatedTutorial.commentIds.filter(
+  //     comment => comment !== commentId,
+  //   );
+  //   const tutorialArray: Tutorial[] = this.tutorials.filter(
+  //     tutorial => tutorial.id !== tutorialId,
+  //   );
+  //   tutorialArray.push(updatedTutorial);
+  //   this.tutorials = tutorialArray;
+  //   return updatedTutorial;
+  // }
 
-  addComment(createComment: CreateCommentDTO): Tutorial {
-    const updatedTutorial: Tutorial = this.getTutorial(
-      createComment.tutorialId,
-    );
-    const newComment = new Comment(createComment);
-    updatedTutorial.commentIds.push(newComment.id);
-    const tutorialArray: Tutorial[] = this.tutorials.filter(
-      tutorial => tutorial.id !== createComment.tutorialId,
-    );
-    tutorialArray.push(updatedTutorial);
-    this.tutorials = tutorialArray;
-    return updatedTutorial;
-  }
+  // upvote(tutorialId: string, userId: string): Tutorial {
+  //   const updatedTutorial: Tutorial = this.getTutorial(tutorialId);
+  //   if (updatedTutorial.downvotes.includes(userId)) {
+  //     console.log('a user cannot vote twice to the same tutorial');
+  //     return updatedTutorial;
+  //   }
 
-  deleteComment(commentId: string, tutorialId: string): Tutorial {
-    const updatedTutorial: Tutorial = this.getTutorial(tutorialId);
-    updatedTutorial.commentIds = updatedTutorial.commentIds.filter(
-      comment => comment !== commentId,
-    );
-    const tutorialArray: Tutorial[] = this.tutorials.filter(
-      tutorial => tutorial.id !== tutorialId,
-    );
-    tutorialArray.push(updatedTutorial);
-    this.tutorials = tutorialArray;
-    return updatedTutorial;
-  }
+  //   if (updatedTutorial.upvotes.includes(userId)) {
+  //     updatedTutorial.upvotes = updatedTutorial.upvotes.filter(
+  //       user => user !== userId,
+  //     );
+  //   } else {
+  //     updatedTutorial.upvotes.push(userId);
+  //   }
 
-  upvote(tutorialId: string, userId: string): Tutorial {
-    const updatedTutorial: Tutorial = this.getTutorial(tutorialId);
-    if (updatedTutorial.downvotes.includes(userId)) {
-      console.log('a user cannot vote twice to the same tutorial');
-      return updatedTutorial;
-    }
+  //   const tutorialArray: Tutorial[] = this.tutorials.filter(
+  //     tutorial => tutorial.id !== tutorialId,
+  //   );
+  //   tutorialArray.push(updatedTutorial);
+  //   this.tutorials = tutorialArray;
+  //   return updatedTutorial;
+  // }
 
-    if (updatedTutorial.upvotes.includes(userId)) {
-      updatedTutorial.upvotes = updatedTutorial.upvotes.filter(
-        user => user !== userId,
-      );
-    } else {
-      updatedTutorial.upvotes.push(userId);
-    }
+  // downvote(tutorialId: string, userId: string): Tutorial {
+  //   const updatedTutorial: Tutorial = this.getTutorial(tutorialId);
+  //   if (
+  //     updatedTutorial.downvotes.includes(userId) ||
+  //     updatedTutorial.upvotes.includes(userId)
+  //   ) {
+  //     console.log('a user cannot vote twice to the same tutorial');
+  //     return updatedTutorial;
+  //   }
 
-    const tutorialArray: Tutorial[] = this.tutorials.filter(
-      tutorial => tutorial.id !== tutorialId,
-    );
-    tutorialArray.push(updatedTutorial);
-    this.tutorials = tutorialArray;
-    return updatedTutorial;
-  }
+  //   if (updatedTutorial.downvotes.includes(userId)) {
+  //     updatedTutorial.downvotes = updatedTutorial.downvotes.filter(
+  //       user => user !== userId,
+  //     );
+  //   } else {
+  //     updatedTutorial.downvotes.push(userId);
+  //   }
 
-  downvote(tutorialId: string, userId: string): Tutorial {
-    const updatedTutorial: Tutorial = this.getTutorial(tutorialId);
-    if (
-      updatedTutorial.downvotes.includes(userId) ||
-      updatedTutorial.upvotes.includes(userId)
-    ) {
-      console.log('a user cannot vote twice to the same tutorial');
-      return updatedTutorial;
-    }
+  //   const tutorialArray: Tutorial[] = this.tutorials.filter(
+  //     tutorial => tutorial.id !== tutorialId,
+  //   );
+  //   tutorialArray.push(updatedTutorial);
+  //   this.tutorials = tutorialArray;
+  //   return updatedTutorial;
+  // }
 
-    if (updatedTutorial.downvotes.includes(userId)) {
-      updatedTutorial.downvotes = updatedTutorial.downvotes.filter(
-        user => user !== userId,
-      );
-    } else {
-      updatedTutorial.downvotes.push(userId);
-    }
+  // deleteTutorial(id: string): Tutorial {
+  //   const removedTutorial: Tutorial = this.getTutorial(id);
+  //   this.userService.deleteTutorial(removedTutorial.submitterId, id);
+  //   this.tutorials = this.tutorials.filter(tutorial => tutorial.id !== id);
+  //   return removedTutorial;
+  // }
 
-    const tutorialArray: Tutorial[] = this.tutorials.filter(
-      tutorial => tutorial.id !== tutorialId,
-    );
-    tutorialArray.push(updatedTutorial);
-    this.tutorials = tutorialArray;
-    return updatedTutorial;
-  }
-
-  deleteTutorial(id: string): Tutorial {
-    const removedTutorial: Tutorial = this.getTutorial(id);
-    this.userService.deleteTutorial(removedTutorial.submitterId, id);
-    this.tutorials = this.tutorials.filter(tutorial => tutorial.id !== id);
-    return removedTutorial;
-  }
-
-  addTutorial(createTutorial: CreateTutorialDTO): Tutorial {
-    const newTutorial: Tutorial = new Tutorial(createTutorial);
-    this.userService.addTutorial(createTutorial.userId, newTutorial.id);
-    this.tutorials.push(newTutorial);
-    return newTutorial;
-  }
-
-  async getAllTags(name: string): Promise<Tag[]> {
-    const tag = new Tag(name);
-    return this.tagRepository.find();
-  }
+  // addTutorial(createTutorial: CreateTutorialDTO): Tutorial {
+  //   const newTutorial: Tutorial = new Tutorial(createTutorial);
+  //   this.userService.addTutorial(createTutorial.userId, newTutorial.id);
+  //   this.tutorials.push(newTutorial);
+  //   return newTutorial;
+  // }
 }

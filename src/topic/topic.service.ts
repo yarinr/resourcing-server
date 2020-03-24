@@ -1,79 +1,62 @@
 import { Injectable } from '@nestjs/common';
-import {
-  Topic,
-  CreateTopicDTO,
-  ApprovalStatus,
-  CategoryName,
-} from '../entities';
+import { Category, Topic, ApprovalStatus } from 'src/all-entities.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class TopicService {
-  public topics: Topic[] = [];
-
-  constructor() {
-    this.topics.push(
-      ...[
-        {
-          id: '1',
-          name: 'angular',
-          icon: 'angular path',
-          categoryId: CategoryName.Programming,
-          status: ApprovalStatus.Approved,
-        },
-        {
-          id: '2',
-          name: 'css',
-          icon: 'css path',
-          categoryId: CategoryName.Design,
-          status: ApprovalStatus.Approved,
-        },
-        {
-          id: '3',
-          name: 'linux',
-          icon: 'linux path',
-          categoryId: CategoryName.DevOps,
-          status: ApprovalStatus.Approved,
-        },
-      ],
+  constructor(
+    @InjectRepository(Topic)
+    private readonly topicRepository: Repository<Topic>,
+  ) {
+    this.topicRepository.save(
+      new Topic('angular', 'angular.io', Category.PROGRAMMING),
     );
+    this.topicRepository.save(
+      new Topic('react', 'react.io', Category.PROGRAMMING),
+    );
+    this.topicRepository.save(new Topic('linux', 'linux.io', Category.DEVOPS));
+    this.topicRepository.save(
+      new Topic('docker', 'docker.io', Category.DEVOPS),
+    );
+    this.topicRepository.save(new Topic('css', 'css.io', Category.DESIGN));
+    this.topicRepository.save(new Topic('less', 'less.io', Category.DESIGN));
   }
 
-  async getTopic(id: string): Promise<Topic> {
-    return await this.topics.find(topic => topic.id === id);
+  async getAllTopics(): Promise<Topic[]> {
+    return await this.topicRepository.find();
   }
 
-  async deleteTopic(topicId: string): Promise<Topic> {
-    const topicToDelete = this.getTopic(topicId);
-    this.topics = this.topics.filter(topic => topic.id !== topicId);
-    return topicToDelete;
+  async getTopic(name: string): Promise<Topic> {
+    return await this.topicRepository.findOne(name);
   }
 
-  async addTopic(createTopic: CreateTopicDTO): Promise<Topic> {
-    const newTopic: Topic = new Topic(createTopic);
-    this.topics.push(newTopic);
-    return newTopic;
+  async createTopic(
+    name: string,
+    icon: string,
+    category: Category,
+  ): Promise<Topic> {
+    const topic = new Topic(name, icon, category);
+    return this.topicRepository.save(topic);
   }
 
   async getTopicsByStatus(status: ApprovalStatus): Promise<Topic[]> {
-    return await this.topics.filter(topic => topic.status === status);
+    return await this.topicRepository
+      .createQueryBuilder()
+      .where('topic.approvalStatusCode = :status', { status })
+      .getMany();
   }
 
-  async getTopicsByCategory(category: CategoryName): Promise<Topic[]> {
-    return await this.topics.filter(topic => topic.categoryId === category);
+  async getTopicsByCategory(category: Category): Promise<Topic[]> {
+    return await this.topicRepository
+      .createQueryBuilder()
+      .where('topic.category = :category', { category })
+      .getMany();
   }
 
-  // TO DO: combine functions
-  async approveTopic(topicId: string) {
-    const topic: Topic = await this.deleteTopic(topicId);
-    topic.status = ApprovalStatus.Approved;
-    this.topics.push(topic);
-    return topic;
-  }
-
-  async rejectTopic(topicId: string) {
-    const topic: Topic = await this.deleteTopic(topicId);
-    topic.status = ApprovalStatus.Rejected;
-    this.topics.push(topic);
-    return topic;
+  async updateTopicStatus(topicName: string, status: ApprovalStatus) {
+    return await this.topicRepository.update(topicName, {
+      approvalStatusCode: status,
+    });
   }
 }

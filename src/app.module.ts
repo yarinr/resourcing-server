@@ -13,7 +13,8 @@ import { TopicModule } from './topic/topic.module';
       type: 'sqlite',
       database: 'resourcing.db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: false,
+      synchronize: true,
+      dropSchema: true,
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: 'schema.gql',
@@ -22,7 +23,7 @@ import { TopicModule } from './topic/topic.module';
     }),
     //UserModule,
     TutorialModule,
-    //TopicModule,
+    TopicModule,
   ],
   controllers: [AppController],
   providers: [AppService],
