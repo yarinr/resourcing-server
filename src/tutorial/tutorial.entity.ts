@@ -54,6 +54,7 @@ export enum ApprovalStatus {
 }
 registerEnumType(ApprovalStatus, { name: 'ApprovalStatus' });
 
+// tslint:disable-next-line: max-classes-per-file
 @ObjectType()
 @Entity()
 export class Tutorial {
@@ -121,6 +122,7 @@ export class Tutorial {
   approvalStatusCode: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 @ObjectType()
 @Entity()
 export class Comment {
@@ -151,12 +153,16 @@ export class Comment {
   postedAt: Date;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 @ObjectType()
 @Entity()
 export class Tag {
   @Field()
   @PrimaryColumn()
   name: string;
+  constructor(name: string) {
+    this.name = name;
+  }
 
   @Field(type => [Tutorial])
   @ManyToMany(
@@ -166,6 +172,7 @@ export class Tag {
   tutorials: Tutorial[];
 }
 
+// tslint:disable-next-line: max-classes-per-file
 @ObjectType()
 @Entity()
 export class Report {
@@ -206,6 +213,7 @@ export enum VoteType {
 }
 registerEnumType(VoteType, { name: 'VoteType' });
 
+// tslint:disable-next-line: max-classes-per-file
 @ObjectType()
 @Entity()
 export class Vote {

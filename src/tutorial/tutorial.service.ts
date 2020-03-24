@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Options } from '@nestjs/common';
 import { Tag } from './tutorial.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -11,8 +11,12 @@ export class TutorialService {
   ) {}
 
   async createTag(name: string): Promise<Tag> {
-    const tag = new Tag();
-    tag.name = name;
+    const tag = new Tag(name);
     return this.tagRepository.save(tag);
+  }
+
+  async getAllTags(name: string): Promise<Tag[]> {
+    const tag = new Tag(name);
+    return this.tagRepository.find();
   }
 }

@@ -13,6 +13,7 @@ import { TutorialModule } from './tutorial/tutorial.module';
       database: 'resourcing.db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
+      dropSchema: true,
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: 'schema.gql',

@@ -10,7 +10,7 @@ export class TutorialResolver {
 
   @Query(returns => [User])
   async users() {
-    return [<User>{ id: 1 }];
+    return [{ id: 1 } as User];
   }
 
   @Query(returns => [Tutorial])
@@ -30,11 +30,12 @@ export class TutorialResolver {
 
   @Query(returns => [Tag])
   async tags() {
-    return [];
+    const tag = await this.tutorialService.getAllTags('amir');
+    return tag;
   }
 
   @Mutation(() => Tag)
-  async createTag(@Arg('name') name: string) {
+  async createTag(@Args('name') name: string) {
     return await this.tutorialService.createTag(name);
   }
 }
