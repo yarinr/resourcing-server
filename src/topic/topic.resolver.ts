@@ -1,10 +1,10 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 
-import { Category, ApprovalStatus } from '../entities/utils.entity';
+import { Category, ApprovalStatus } from '../dal/utils.entity';
 import { TopicService } from './topic.service';
 import { Arg } from 'type-graphql';
-import { Topic } from 'src/entities/topic/topic.entity';
-import { Tutorial } from 'src/entities/tutorial/tutorial.entity';
+import { Topic } from 'src/dal/topic/topic.entity';
+import { Tutorial } from 'src/dal/tutorial/tutorial.entity';
 
 @Resolver()
 export class TopicResolver {

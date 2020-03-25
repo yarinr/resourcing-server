@@ -1,8 +1,8 @@
 import { Resolver, Query } from '@nestjs/graphql';
 
 import { TutorialService } from './tutorial.service';
-import { User } from 'src/entities/user/user.entity';
-import { Tutorial } from 'src/entities/tutorial/tutorial.entity';
+import { User } from 'src/dal/user/user.entity';
+import { Tutorial } from 'src/dal/tutorial/tutorial.entity';
 
 @Resolver()
 export class TutorialResolver {

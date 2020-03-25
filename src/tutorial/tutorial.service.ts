@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Tutorial } from 'src/entities/tutorial/tutorial.entity';
+import { Tutorial } from 'src/dal/tutorial/tutorial.entity';
 
 @Injectable()
 export class TutorialService {

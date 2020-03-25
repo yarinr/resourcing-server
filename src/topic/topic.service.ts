@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Category, ApprovalStatus } from 'src/entities/utils.entity';
+import { Category, ApprovalStatus } from 'src/dal/utils.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Topic } from 'src/entities/topic/topic.entity';
+import { Topic } from 'src/dal/topic/topic.entity';
 
 @Injectable()
 export class TopicService {
