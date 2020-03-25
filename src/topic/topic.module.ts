@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
-import { TopicService } from './topic.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Topic } from 'src/dal/topic/topic.entity';
 import { TopicResolver } from './topic.resolver';
+import { DalModule } from 'src/dal/dal.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Topic])],
-  providers: [TopicService, TopicResolver],
-  exports: [TopicService],
+  imports: [DalModule],
+  providers: [TopicResolver],
+  exports: [],
 })
 export class TopicModule {}

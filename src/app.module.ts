@@ -3,9 +3,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './user/user.module';
 import { TutorialModule } from './tutorial/tutorial.module';
 import { TopicModule } from './topic/topic.module';
+import { DalModule } from './dal/dal.module';
 
 @Module({
   imports: [
@@ -21,9 +21,10 @@ import { TopicModule } from './topic/topic.module';
       debug: true,
       playground: true,
     }),
-    //UserModule,
-    TutorialModule,
+    DalModule,
     TopicModule,
+    TutorialModule,
+    //UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

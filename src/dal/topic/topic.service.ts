@@ -38,7 +38,7 @@ export class TopicService {
     category: Category,
   ): Promise<Topic> {
     const topic = new Topic(name, icon, category);
-    return this.topicRepository.save(topic);
+    return await this.topicRepository.save(topic);
   }
 
   async getTopicsByStatus(status: ApprovalStatus): Promise<Topic[]> {
