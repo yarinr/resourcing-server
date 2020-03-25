@@ -1,13 +1,10 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 
-import {
-  Topic,
-  Category,
-  Tutorial,
-  ApprovalStatus,
-} from '../all-entities.entity';
+import { Category, ApprovalStatus } from '../entities/utils.entity';
 import { TopicService } from './topic.service';
 import { Arg } from 'type-graphql';
+import { Topic } from 'src/entities/topic/topic.entity';
+import { Tutorial } from 'src/entities/tutorial/tutorial.entity';
 
 @Resolver()
 export class TopicResolver {
@@ -48,11 +45,11 @@ export class TopicResolver {
     return await this.topicService.createTopic(name, icon, category);
   }
 
-  //   @Mutation(() => Topic)
-  //   async updateTopicStatus(
-  //     @Args('topicName') topicName: string,
-  //     @Args('status') status: ApprovalStatus,
-  //   ) {
-  //     return await this.topicService.updateTopicStatus(topicName, status);
-  //   }
+  @Mutation(() => Topic)
+  async updateTopicStatus(
+    @Args('topicName') topicName: string,
+    @Args('status') status: ApprovalStatus,
+  ) {
+    return await this.topicService.updateTopicStatus(topicName, status);
+  }
 }

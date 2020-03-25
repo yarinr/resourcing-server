@@ -1,8 +1,8 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { Arg } from 'type-graphql';
+import { Resolver, Query } from '@nestjs/graphql';
 
-import { User, Tutorial, Topic, Category } from '../all-entities.entity';
 import { TutorialService } from './tutorial.service';
+import { User } from 'src/entities/user/user.entity';
+import { Tutorial } from 'src/entities/tutorial/tutorial.entity';
 
 @Resolver()
 export class TutorialResolver {

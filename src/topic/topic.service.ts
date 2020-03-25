@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Category, Topic, ApprovalStatus } from 'src/all-entities.entity';
+import { Category, ApprovalStatus } from 'src/entities/utils.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Topic } from 'src/entities/topic/topic.entity';
 
 @Injectable()
 export class TopicService {
@@ -54,9 +55,14 @@ export class TopicService {
       .getMany();
   }
 
-  async updateTopicStatus(topicName: string, status: ApprovalStatus) {
-    return await this.topicRepository.update(topicName, {
+  async updateTopicStatus(
+    topicName: string,
+    status: ApprovalStatus,
+  ): Promise<Topic> {
+    await this.topicRepository.update(topicName, {
       approvalStatusCode: status,
     });
+
+    return await this.getTopic(topicName);
   }
 }

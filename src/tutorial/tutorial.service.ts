@@ -1,15 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { UserService } from 'src/user/user.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Tutorial } from 'src/all-entities.entity';
+import { Tutorial } from 'src/entities/tutorial/tutorial.entity';
 
 @Injectable()
 export class TutorialService {
   constructor(
     @InjectRepository(Tutorial)
     private readonly tutorialRepository: Repository<Tutorial>,
-    private readonly userService: UserService,
   ) {
     // const createTutorial: CreateTutorialDTO = {
     //   description: 'learn python quickly',

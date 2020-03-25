@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TopicService } from './topic.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Topic } from 'src/all-entities.entity';
+import { Topic } from 'src/entities/topic/topic.entity';
 import { TopicResolver } from './topic.resolver';
 
 @Module({
