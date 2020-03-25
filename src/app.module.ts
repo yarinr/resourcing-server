@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TutorialModule } from './tutorial/tutorial.module';
 import { TopicModule } from './topic/topic.module';
 import { DalModule } from './dal/dal.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { DalModule } from './dal/dal.module';
     DalModule,
     TopicModule,
     TutorialModule,
-    //UserModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

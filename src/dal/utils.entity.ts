@@ -1,18 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  ManyToOne,
-  OneToMany,
-  ManyToMany,
-  JoinTable,
-} from 'typeorm';
-import { Field, ID, ObjectType, registerEnumType, Int } from 'type-graphql';
-import { Topic } from './topic/topic.entity';
-import { Comment } from './comment/comment.entity';
-import { Vote } from './vote/vote.entity';
-import { User } from './user/user.entity';
+import { registerEnumType } from 'type-graphql';
 
 export enum VoteType {
   Upvote = 'upvote',

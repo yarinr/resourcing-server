@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
+import { DalModule } from 'src/dal/dal.module';
 
 @Module({
-  controllers: [UserController],
-  providers: [UserService],
-  exports: [UserService],
+  imports: [DalModule],
+  providers: [],
+  exports: [],
 })
 export class UserModule {}
