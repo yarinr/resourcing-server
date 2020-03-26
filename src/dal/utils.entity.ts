@@ -19,3 +19,9 @@ export enum Category {
   DESIGN = 'design',
 }
 registerEnumType(Category, { name: 'Category' });
+
+export enum UserLevel {
+  ADMIN = 'admin',
+  USER = 'user',
+}
+registerEnumType(UserLevel, { name: 'UserLevel' });

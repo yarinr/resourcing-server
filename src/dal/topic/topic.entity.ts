@@ -24,14 +24,15 @@ export class Topic {
   @Column({ type: 'simple-enum', enum: Category })
   category: Category;
 
-  @Field(type => [Tutorial, { nullable: true }], { nullable: true })
+  @Field(type => [Tutorial], { nullable: true })
   @ManyToMany(
     type => Tutorial,
     tutorial => tutorial.tags,
+    { cascade: true, eager: true },
   )
   tutorials?: Tutorial[];
 
   @Field(type => ApprovalStatus)
   @Column({ type: 'simple-enum', enum: ApprovalStatus })
-  approvalStatusCode: string;
+  approvalStatusCode: ApprovalStatus;
 }

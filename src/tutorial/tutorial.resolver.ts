@@ -7,12 +7,6 @@ import { Tutorial } from 'src/dal/tutorial/tutorial.entity';
 @Resolver()
 export class TutorialResolver {
   constructor(private readonly tutorialService: TutorialService) {}
-
-  @Query(returns => [User])
-  async users() {
-    return [{ id: 1 } as User];
-  }
-
   @Query(returns => [Tutorial])
   async tutorials() {
     return [];

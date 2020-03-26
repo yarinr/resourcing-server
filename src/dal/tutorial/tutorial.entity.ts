@@ -20,7 +20,7 @@ import { ApprovalStatus } from '../utils.entity';
 export class Tutorial {
   @Field(type => ID)
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
   @Field()
   @Column()
