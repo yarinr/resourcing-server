@@ -1,11 +1,5 @@
 import { ObjectType, Field, ID, Int } from 'type-graphql';
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToMany,
-  ManyToMany,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Vote } from '../vote/vote.entity';
 import { Comment } from '../comment/comment.entity';
 import { Tutorial } from '../tutorial/tutorial.entity';
