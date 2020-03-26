@@ -1,8 +1,8 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { Arg } from 'type-graphql';
+import { Resolver, Query } from '@nestjs/graphql';
 
-import { User, Tutorial, Tag } from './tutorial.entity';
-import { TutorialService } from './tutorial.service';
+import { TutorialService } from '../dal/tutorial/tutorial.service';
+import { User } from 'src/dal/user/user.entity';
+import { Tutorial } from 'src/dal/tutorial/tutorial.entity';
 
 @Resolver()
 export class TutorialResolver {
@@ -21,21 +21,5 @@ export class TutorialResolver {
   @Query(returns => Tutorial)
   async tutorial() {
     return [];
-  }
-
-  @Query(returns => [Tutorial])
-  async tutorialsByTag(@Arg('tag') tag: string) {
-    return [];
-  }
-
-  @Query(returns => [Tag])
-  async tags() {
-    const tag = await this.tutorialService.getAllTags('amir');
-    return tag;
-  }
-
-  @Mutation(() => Tag)
-  async createTag(@Args('name') name: string) {
-    return await this.tutorialService.createTag(name);
   }
 }

@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
-import { TypeOrmModule } from '@nestjs/typeorm';
-
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { GraphQLModule } from '@nestjs/graphql';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { TutorialModule } from './tutorial/tutorial.module';
+import { TopicModule } from './topic/topic.module';
+import { DalModule } from './dal/dal.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -20,7 +22,10 @@ import { TutorialModule } from './tutorial/tutorial.module';
       debug: true,
       playground: true,
     }),
+    DalModule,
+    TopicModule,
     TutorialModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

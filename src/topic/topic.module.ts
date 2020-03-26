@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { TutorialResolver } from './tutorial.resolver';
+import { TopicResolver } from './topic.resolver';
 import { DalModule } from 'src/dal/dal.module';
 
 @Module({
   imports: [DalModule],
-  providers: [TutorialResolver],
+  providers: [TopicResolver],
   exports: [],
 })
-export class TutorialModule {}
+export class TopicModule {}
