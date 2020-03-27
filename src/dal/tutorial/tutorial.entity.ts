@@ -14,10 +14,21 @@ import { User } from '../user/user.entity';
 import { Topic } from '../topic/topic.entity';
 import { Comment } from '../comment/comment.entity';
 import { ApprovalStatus } from '../utils.entity';
+import { Tag } from '../tag/tag.entity';
+import { TagService } from '../tag/tag.service';
 
 @ObjectType()
 @Entity()
 export class Tutorial {
+  constructor(title: string, url: string, description: string, tags?: [Tag]) {
+    this.title = title;
+    this.url = url;
+    this.description = description;
+    this.views = 0;
+    this.score = 0;
+    this.approvalStatusCode = ApprovalStatus.Pending;
+  }
+
   @Field(type => ID)
   @PrimaryGeneratedColumn()
   id: string;
@@ -59,20 +70,22 @@ export class Tutorial {
   @Column()
   views: number;
 
-  @Field(type => User)
+  // delete the { nullable: true } after finishing the user entity
+  @Field(type => User, { nullable: true })
   @ManyToOne(
     type => User,
     user => user.tutorials,
   )
   user: User;
 
-  @Field(type => [Topic])
+  @Field(type => [Tag])
   @ManyToMany(
-    type => Topic,
+    type => Tag,
     tag => tag.tutorials,
+    { cascade: true, eager: true },
   )
   @JoinTable()
-  tags: Topic[];
+  tags: Tag[];
 
   @Field(type => ApprovalStatus)
   @Column({ type: 'simple-enum', enum: ApprovalStatus })
