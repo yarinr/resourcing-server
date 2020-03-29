@@ -2,28 +2,83 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tutorial } from 'src/dal/tutorial/tutorial.entity';
+import { Tag } from '../tag/tag.entity';
+import { ApprovalStatus } from '../utils.entity';
+import { TagService } from '../tag/tag.service';
+import { User } from '../user/user.entity';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class TutorialService {
   constructor(
     @InjectRepository(Tutorial)
     private readonly tutorialRepository: Repository<Tutorial>,
+    private userService: UserService,
+    private tagService: TagService,
   ) {
-    // const createTutorial: CreateTutorialDTO = {
-    //   description: 'learn python quickly',
-    //   name: 'python4beginners',
-    //   url: 'https://www.python.org/about/gettingstarted/',
-    //   userId: '206531741',
-    //   tagIds: ['tagId1'],
-    // };
-    // const newTutorial = new Tutorial(createTutorial);
-    // this.userService.addTutorial(createTutorial.userId, newTutorial.id);
-    // this.tutorials.push(newTutorial);
+    // const tutorial = new Tutorial(
+    //   'python4beginners',
+    //   'https://www.python.org/about/gettingstarted/',
+    //   'learn python quickly',
+    // );
+    // const tag1 = new Tag('Python');
+    // tutorial.tags = [tag1];
+    // this.tutorialRepository.save(tutorial);
   }
 
-  // getTutorial(id: string): Tutorial {
-  //   return this.tutorials.find(tutorial => tutorial.id === id);
-  // }
+  // Quereis
+  async getAllTutorials() {
+    return await this.tutorialRepository.find();
+  }
+
+  async getTutorialbyId(id: string): Promise<Tutorial> {
+    return await this.tutorialRepository.findOne(id);
+  }
+
+  // mutations
+  async updateTutorialStatus(
+    id: string,
+    status: ApprovalStatus,
+  ): Promise<Tutorial> {
+    const tutorial = await this.getTutorialbyId(id);
+    if (status === ApprovalStatus.Approved) {
+      tutorial.tags.forEach(tag =>
+        this.tagService.updateTagStatus(tag.name, status),
+      );
+    }
+    await this.tutorialRepository.update(id, {
+      approvalStatusCode: status,
+    });
+    return await this.getTutorialbyId(id);
+  }
+
+  async addNewTutorial(
+    title: string,
+    url: string,
+    description: string,
+    tagNames: [string],
+    userId: string,
+  ): Promise<void | Tutorial> {
+    const user = await this.userService.getUser(userId);
+    if (user) {
+      const tutorial = new Tutorial(title, url, description);
+      const tags: Tag[] = [];
+      for (const tagName of tagNames) {
+        const tag: Tag = await this.tagService.createTag(tagName);
+        tags.push(tag);
+      }
+      tutorial.tags = tags;
+      tutorial.user = user;
+      return await this.tutorialRepository.save(tutorial);
+    }
+  }
+
+  async deleteTutorial(id: string): Promise<string> {
+    await this.tutorialRepository.delete(id).catch((e: Error) => {
+      throw JSON.stringify(e);
+    });
+    return 'delete succesfull';
+  }
 
   // addComment(createComment: CreateCommentDTO): Tutorial {
   //   const updatedTutorial: Tutorial = this.getTutorial(
@@ -99,19 +154,5 @@ export class TutorialService {
   //   tutorialArray.push(updatedTutorial);
   //   this.tutorials = tutorialArray;
   //   return updatedTutorial;
-  // }
-
-  // deleteTutorial(id: string): Tutorial {
-  //   const removedTutorial: Tutorial = this.getTutorial(id);
-  //   this.userService.deleteTutorial(removedTutorial.submitterId, id);
-  //   this.tutorials = this.tutorials.filter(tutorial => tutorial.id !== id);
-  //   return removedTutorial;
-  // }
-
-  // addTutorial(createTutorial: CreateTutorialDTO): Tutorial {
-  //   const newTutorial: Tutorial = new Tutorial(createTutorial);
-  //   this.userService.addTutorial(createTutorial.userId, newTutorial.id);
-  //   this.tutorials.push(newTutorial);
-  //   return newTutorial;
   // }
 }

@@ -13,7 +13,7 @@ export class UserService {
     @InjectRepository(Tutorial)
     private readonly tutorialRepository: Repository<Tutorial>,
   ) {
-    this.userRepository.save(
+    const user1 = this.userRepository.save(
       new User('Amir Halabi', 'amir_halabi', 'amir@gmail.com', UserLevel.ADMIN),
     );
     this.userRepository.save(
@@ -38,12 +38,12 @@ export class UserService {
   }
 
   async getAllUsers(): Promise<User[]> {
-    return await this.userRepository.find();
+    return await this.userRepository.find({ relations: ['tutorials'] });
   }
 
   async getUser(id: string): Promise<User | void> {
     return (await this.userRepository
-      .findOne(id)
+      .findOne(id, { relations: ['tutorials'] })
       .catch((error: Error) => console.log(error.message)))
       ? await this.userRepository
           .findOne(id)
@@ -86,7 +86,9 @@ export class UserService {
     // const tutorial: Tutorial = await this.tutorialService.getTutorial(tutorialId);
     const tutorial: Tutorial | void = await this.tutorialRepository
       .findOne(tutorialId)
-      .catch((error: Error) => console.log(error.message + 'bla'));
+      .catch((error: Error) =>
+        console.log(error.message + 'error during toggle'),
+      );
 
     const updatedUser: User | void = await this.getUser(userId);
 

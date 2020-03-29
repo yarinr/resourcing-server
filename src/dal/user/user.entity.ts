@@ -1,5 +1,11 @@
 import { ObjectType, Field, ID, Int } from 'type-graphql';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  Unique,
+} from 'typeorm';
 import { Vote } from '../vote/vote.entity';
 import { Comment } from '../comment/comment.entity';
 import { Tutorial } from '../tutorial/tutorial.entity';
@@ -7,6 +13,8 @@ import { UserLevel } from '../utils.entity';
 
 @ObjectType()
 @Entity()
+@Unique(['userName'])
+@Unique(['mail'])
 export class User {
   constructor(
     name: string,
@@ -38,11 +46,10 @@ export class User {
   @Column()
   mail: string;
 
-  @Field(type => [Tutorial])
+  @Field(type => [Tutorial], { nullable: true })
   @OneToMany(
     type => Tutorial,
     tutorial => tutorial.user,
-    { cascade: true, eager: true },
   )
   tutorials?: Tutorial[];
 

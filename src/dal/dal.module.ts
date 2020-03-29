@@ -8,10 +8,14 @@ import { User } from './user/user.entity';
 import { Vote } from './vote/vote.entity';
 import { TutorialService } from './tutorial/tutorial.service';
 import { UserService } from './user/user.service';
+import { TagService } from './tag/tag.service';
+import { Tag } from './tag/tag.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Topic, Tutorial, User, Comment, Vote])],
-  providers: [TopicService, TutorialService, UserService],
-  exports: [TopicService, TutorialService, UserService],
+  imports: [
+    TypeOrmModule.forFeature([Topic, Tutorial, User, Comment, Vote, Tag]),
+  ],
+  providers: [TopicService, TutorialService, UserService, TagService],
+  exports: [TopicService, TutorialService, UserService, TagService],
 })
 export class DalModule {}

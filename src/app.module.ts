@@ -7,6 +7,7 @@ import { TutorialModule } from './tutorial/tutorial.module';
 import { TopicModule } from './topic/topic.module';
 import { DalModule } from './dal/dal.module';
 import { UserModule } from './user/user.module';
+import { TagModule } from './tag/tag.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UserModule } from './user/user.module';
     TopicModule,
     TutorialModule,
     UserModule,
+    TagModule,
   ],
   controllers: [AppController],
   providers: [AppService],
