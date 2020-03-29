@@ -19,15 +19,15 @@ export class UserResolver {
   @ResolveProperty('score')
   async score(@Parent() user: User) {
     const tutorials: Tutorial[] = user.tutorials;
-    const score: number = tutorials?.reduce((acc: number, tutorial) => {
-      return (
-        acc +
-          tutorial.votes?.reduce((acc: number, vote) => {
-            return vote.type === VoteType.Upvote ? acc + 1 : acc + 0;
-          }, 0),
-        0
-      );
-    }, 0);
+    const score: number = tutorials?.reduce(
+      (totalAcc: number, tutorial) =>
+        totalAcc +
+        tutorial.votes?.reduce((voteAcc: number, vote) => {
+          return (voteAcc =
+            vote.type === VoteType.Upvote ? voteAcc + 1 : voteAcc - 1);
+        }, 0),
+      0,
+    );
     return score ? score : 0;
   }
 

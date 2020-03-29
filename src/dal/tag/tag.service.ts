@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ApprovalStatus } from 'src/dal/utils.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, getRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Tag } from './tag.entity';
-import { Tutorial } from '../tutorial/tutorial.entity';
 
 @Injectable()
 export class TagService {

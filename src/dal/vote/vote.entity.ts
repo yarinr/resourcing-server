@@ -5,6 +5,7 @@ import {
   ManyToOne,
   Column,
   CreateDateColumn,
+  Unique,
 } from 'typeorm';
 import { VoteType } from '../utils.entity';
 import { User } from '../user/user.entity';
@@ -12,6 +13,7 @@ import { Tutorial } from '../tutorial/tutorial.entity';
 
 @ObjectType()
 @Entity()
+@Unique(['user', 'tutorial'])
 export class Vote {
   @Field(type => ID)
   @PrimaryGeneratedColumn()

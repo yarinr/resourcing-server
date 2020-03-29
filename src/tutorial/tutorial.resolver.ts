@@ -43,9 +43,15 @@ export class TutorialResolver {
     @Args('url') url: string,
     @Args('desc') desc: string,
     @Args({ name: 'tags', type: () => [String] } as ArgsOptions) tags: [string],
-    @Context('userId') userID: string,
+    @Context() context: any,
   ) {
-    return this.tutorialService.addNewTutorial(title, url, desc, tags, userID);
+    return this.tutorialService.addNewTutorial(
+      title,
+      url,
+      desc,
+      tags,
+      context.req.header('userID'),
+    );
   }
 
   @Mutation(returns => String)

@@ -10,12 +10,25 @@ import { TutorialService } from './tutorial/tutorial.service';
 import { UserService } from './user/user.service';
 import { TagService } from './tag/tag.service';
 import { Tag } from './tag/tag.entity';
+import { VoteService } from './vote/vote.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Topic, Tutorial, User, Comment, Vote, Tag]),
   ],
-  providers: [TopicService, TutorialService, UserService, TagService],
-  exports: [TopicService, TutorialService, UserService, TagService],
+  providers: [
+    TopicService,
+    TutorialService,
+    UserService,
+    TagService,
+    VoteService,
+  ],
+  exports: [
+    TopicService,
+    TutorialService,
+    UserService,
+    TagService,
+    VoteService,
+  ],
 })
 export class DalModule {}
