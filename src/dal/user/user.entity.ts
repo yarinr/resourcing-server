@@ -54,11 +54,10 @@ export class User {
   )
   tutorials?: Tutorial[];
 
-  @Field(type => [Comment])
+  @Field(type => [Comment], { nullable: true })
   @OneToMany(
     type => Comment,
     comment => comment.user,
-    { cascade: true, eager: true },
   )
   comments?: Comment[];
 

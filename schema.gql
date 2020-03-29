@@ -48,7 +48,6 @@ type Query {
   tutorialById(id: String!): Tutorial!
   topics: [Topic!]!
   topicByName(topicName: String!): Topic
-  tutorialsByTag(tagName: String!): [Tutorial!]
   TopicsByStatus(status: String!): [Topic!]
   TopicsByCategory(category: String!): [Topic!]
   users: [User!]!
@@ -56,6 +55,7 @@ type Query {
   tags: [Tag!]!
   TagsByName(tagName: String!): Tag
   TagsByStatus(status: String!): [Tag!]
+  tutorialsByTag(tagName: String!): [Tutorial!]
   comments: [Comment!]!
   commentById(id: String!): Comment!
 }
@@ -70,7 +70,6 @@ type Topic {
   name: String!
   icon: String!
   category: Category!
-  tutorials: [Tutorial!]
   approvalStatusCode: ApprovalStatus!
 }
 
@@ -87,7 +86,7 @@ type Tutorial {
   user: User!
   tags: [Tag!]!
   approvalStatusCode: ApprovalStatus!
-  bookmarked: [User!]!
+  bookmarked: [User!]
 }
 
 type User {
@@ -96,7 +95,7 @@ type User {
   userName: String!
   mail: String!
   tutorials: [Tutorial!]
-  comments: [Comment!]!
+  comments: [Comment!]
   bookmarks: [Tutorial!]
   votes: [Vote!]!
   score: Int!

@@ -24,13 +24,6 @@ export class Topic {
   @Column({ type: 'simple-enum', enum: Category })
   category: Category;
 
-  @Field(type => [Tutorial], { nullable: true })
-  @ManyToMany(
-    type => Tutorial,
-    tutorial => tutorial.tags,
-  )
-  tutorials?: Tutorial[];
-
   @Field(type => ApprovalStatus)
   @Column({ type: 'simple-enum', enum: ApprovalStatus })
   approvalStatusCode: ApprovalStatus;

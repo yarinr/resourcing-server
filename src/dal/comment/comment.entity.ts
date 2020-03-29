@@ -25,6 +25,7 @@ export class Comment {
   @ManyToOne(
     type => User,
     user => user.comments,
+    { cascade: true, eager: true },
   )
   user: User;
 
@@ -32,6 +33,7 @@ export class Comment {
   @ManyToOne(
     type => Tutorial,
     tutorial => tutorial.comments,
+    { cascade: true, eager: true },
   )
   tutorial: Tutorial;
 

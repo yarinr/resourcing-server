@@ -7,6 +7,9 @@ import { Tutorial } from '../tutorial/tutorial.entity';
 
 @Injectable()
 export class UserService {
+  private readonly relations = {
+    relations: ['tutorials', 'bookmarks', 'comments', 'votes'],
+  };
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -38,15 +41,11 @@ export class UserService {
   }
 
   async getAllUsers(): Promise<User[]> {
-    return await this.userRepository.find({
-      relations: ['tutorials', 'bookmarks'],
-    });
+    return await this.userRepository.find(this.relations);
   }
 
   async getUser(id: string): Promise<User> {
-    const user = await this.userRepository.findOne(id, {
-      relations: ['tutorials', 'bookmarks'],
-    });
+    const user = await this.userRepository.findOne(id, this.relations);
     return user ? user : undefined;
   }
 
@@ -84,7 +83,7 @@ export class UserService {
     const tutorial: Tutorial | void = await this.tutorialRepository
       .findOne(tutorialId)
       .catch((error: Error) =>
-        console.log(error.message + 'error during toggle'),
+        console.log(error.message + 'error accured during toggle'),
       );
 
     const updatedUser: User = await this.getUser(userId);
@@ -122,7 +121,6 @@ export class UserService {
         );
         updatedUser.bookmarks.push(tutorial);
       }
-      updatedUser.bookmarks.forEach(tu => console.log(tu));
       await this.userRepository.save(updatedUser);
       return await this.getUser(updatedUser.id);
     }

@@ -51,7 +51,6 @@ export class Tutorial {
   @OneToMany(
     type => Comment,
     comment => comment.tutorial,
-    { cascade: true, eager: true },
   )
   comments?: Comment[];
 
@@ -91,7 +90,7 @@ export class Tutorial {
   @Column({ type: 'simple-enum', enum: ApprovalStatus })
   approvalStatusCode: string;
 
-  @Field(type => [User])
+  @Field(type => [User], { nullable: true })
   @ManyToMany(
     type => User,
     user => user.bookmarks,
