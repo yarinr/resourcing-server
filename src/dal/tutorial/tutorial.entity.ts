@@ -11,11 +11,9 @@ import {
 } from 'typeorm';
 import { Vote } from '../vote/vote.entity';
 import { User } from '../user/user.entity';
-import { Topic } from '../topic/topic.entity';
 import { Comment } from '../comment/comment.entity';
 import { ApprovalStatus } from '../utils.entity';
 import { Tag } from '../tag/tag.entity';
-import { TagService } from '../tag/tag.service';
 
 @ObjectType()
 @Entity()

@@ -37,7 +37,8 @@ export class TagService {
 
   async getTagsByStatus(status: ApprovalStatus): Promise<Tag[]> {
     return await this.tagRepository
-      .createQueryBuilder()
+      .createQueryBuilder('tag')
+      .leftJoinAndSelect('tag.tutorials', 'tutorial')
       .where('tag.approvalStatusCode = :status', { status })
       .getMany();
   }

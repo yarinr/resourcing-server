@@ -25,7 +25,7 @@ export class TutorialService {
     // this.tutorialRepository.save(tutorial);
   }
 
-  // Quereis
+  // Queries
   async getAllTutorials() {
     return await this.tutorialRepository.find();
   }
