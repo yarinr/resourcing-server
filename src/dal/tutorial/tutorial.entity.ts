@@ -70,11 +70,11 @@ export class Tutorial {
   @Column()
   views: number;
 
-  // delete the { nullable: true } after finishing the user entity
-  @Field(type => User, { nullable: true })
+  @Field(type => User)
   @ManyToOne(
     type => User,
     user => user.tutorials,
+    { cascade: true, eager: true },
   )
   user: User;
 

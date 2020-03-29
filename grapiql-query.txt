@@ -1,0 +1,124 @@
+query getTag {
+  tags {
+    name
+    approvalStatusCode
+    tutorials {
+      id
+      score
+      url
+    }
+  }
+
+  
+}
+query users {
+  users{
+    id
+    name
+    tutorials{
+      title
+    }
+  }
+}
+
+mutation createTag {
+  createTag(tagName: "something") {
+    name
+    approvalStatusCode
+  }
+}
+
+query getTagbyStatus {
+  TagsByStatus(status: "pending") {
+    name
+    approvalStatusCode
+  }
+}
+
+mutation updateTagStatus {
+  updateTagStatus(tagName: "Python", status: "approved") {
+    name
+    approvalStatusCode
+  }
+}
+
+mutation updateTopicStatus {
+  updateTopicStatus(topicName: "css", status: "Apprsadoved") {
+    name
+    approvalStatusCode
+  }
+}
+
+query getAllT {
+  tutorials {
+    title
+    description
+    id
+    user{
+      id
+      name
+    }
+    tags {
+      name
+      approvalStatusCode
+    }
+    approvalStatusCode
+  }
+}
+
+query getTById {
+  tutorialById(id: "1") {
+    title
+    description
+    tags {
+      name
+      approvalStatusCode
+    }
+  }
+}
+
+mutation TStatus {
+  updateTutorialStatus(id: "2", status: "approved") {
+    id
+    tags {
+      approvalStatusCode
+    }
+  }
+}
+
+mutation AddTutorial1 {
+  addTutorial(
+    title: "javaScript"
+    url: "https://javascript.info/"
+    desc: "somthing"
+    tags: ["Java Script", "ECMA6", "CSS"]
+  ) {
+    id
+    title
+    tags {
+      name
+      approvalStatusCode
+    }
+  }
+}
+
+mutation AddTutorial2 {
+  addTutorial(
+    title: "python4beginners"
+    url: "https://www.python.org/about/gettingstarted/"
+    desc: "learn python quickly"
+    tags: ["Python","3.4"]
+  ) {
+    id
+    title
+    tags {
+      name
+      approvalStatusCode
+    }
+  }
+}
+
+mutation deleteTutorial{
+  deletTutorial(id:"5")
+}
+

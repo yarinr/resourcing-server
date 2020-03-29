@@ -1,7 +1,13 @@
-import { Resolver, Query, Args, Mutation, ArgsOptions } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Args,
+  Mutation,
+  ArgsOptions,
+  Context,
+} from '@nestjs/graphql';
 
 import { TutorialService } from '../dal/tutorial/tutorial.service';
-import { User } from 'src/dal/user/user.entity';
 import { Tutorial } from 'src/dal/tutorial/tutorial.entity';
 import { ApprovalStatus } from 'src/dal/utils.entity';
 
@@ -37,8 +43,9 @@ export class TutorialResolver {
     @Args('url') url: string,
     @Args('desc') desc: string,
     @Args({ name: 'tags', type: () => [String] } as ArgsOptions) tags: [string],
+    @Context('userId') userID: string,
   ) {
-    return this.tutorialService.addNewTutorial(title, url, desc, tags);
+    return this.tutorialService.addNewTutorial(title, url, desc, tags, userID);
   }
 
   @Mutation(returns => String)

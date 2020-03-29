@@ -28,7 +28,6 @@ export class Topic {
   @ManyToMany(
     type => Tutorial,
     tutorial => tutorial.tags,
-    { cascade: true, eager: true },
   )
   tutorials?: Tutorial[];
 

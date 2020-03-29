@@ -29,15 +29,21 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 scalar DateTime
 
 type Mutation {
+  updateTutorialStatus(status: String!, id: String!): Tutorial!
+  addTutorial(tags: [String!]!, desc: String!, url: String!, title: String!): Tutorial!
+  deletTutorial(id: String!): String!
   createTopic(category: String!, icon: String!, name: String!): Topic!
   updateTopicStatus(status: String!, topicName: String!): Topic!
   registerUser(mail: String!, userName: String!, name: String!): User!
   addNewAdmin(mail: String!, userName: String!, name: String!): User!
   toggleBookmark(tutorialId: String!, userId: String!): User
+  createTag(tagName: String!): Tag!
+  updateTagStatus(status: String!, tagName: String!): Tag!
 }
 
 type Query {
   tutorials: [Tutorial!]!
+  tutorialById(id: String!): Tutorial!
   tutorial: Tutorial!
   topics: [Topic!]!
   topicByName(topicName: String!): Topic
@@ -46,6 +52,15 @@ type Query {
   TopicsByCategory(category: String!): [Topic!]
   users: [User!]!
   userById(userId: String!): User
+  tags: [Tag!]!
+  TagsByName(tagName: String!): Tag
+  TagsByStatus(status: String!): [Tag!]
+}
+
+type Tag {
+  name: String!
+  tutorials: [Tutorial!]
+  approvalStatusCode: ApprovalStatus!
 }
 
 type Topic {
@@ -67,7 +82,7 @@ type Tutorial {
   score: Int!
   views: Int!
   user: User!
-  tags: [Topic!]!
+  tags: [Tag!]!
   approvalStatusCode: ApprovalStatus!
 }
 
@@ -76,7 +91,7 @@ type User {
   name: String!
   userName: String!
   mail: String!
-  tutorials: [Tutorial!]!
+  tutorials: [Tutorial!]
   comments: [Comment!]!
   bookmarks: [Tutorial!]!
   votes: [Vote!]!
