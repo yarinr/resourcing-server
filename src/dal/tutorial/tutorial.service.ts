@@ -5,7 +5,6 @@ import { Tutorial } from 'src/dal/tutorial/tutorial.entity';
 import { Tag } from '../tag/tag.entity';
 import { ApprovalStatus } from '../utils.entity';
 import { TagService } from '../tag/tag.service';
-import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 
 @Injectable()
@@ -79,80 +78,4 @@ export class TutorialService {
     });
     return 'delete succesfull';
   }
-
-  // addComment(createComment: CreateCommentDTO): Tutorial {
-  //   const updatedTutorial: Tutorial = this.getTutorial(
-  //     createComment.tutorialId,
-  //   );
-  //   const newComment = new Comment(createComment);
-  //   updatedTutorial.commentIds.push(newComment.id);
-  //   const tutorialArray: Tutorial[] = this.tutorials.filter(
-  //     tutorial => tutorial.id !== createComment.tutorialId,
-  //   );
-  //   tutorialArray.push(updatedTutorial);
-  //   this.tutorials = tutorialArray;
-  //   return updatedTutorial;
-  // }
-
-  // deleteComment(commentId: string, tutorialId: string): Tutorial {
-  //   const updatedTutorial: Tutorial = this.getTutorial(tutorialId);
-  //   updatedTutorial.commentIds = updatedTutorial.commentIds.filter(
-  //     comment => comment !== commentId,
-  //   );
-  //   const tutorialArray: Tutorial[] = this.tutorials.filter(
-  //     tutorial => tutorial.id !== tutorialId,
-  //   );
-  //   tutorialArray.push(updatedTutorial);
-  //   this.tutorials = tutorialArray;
-  //   return updatedTutorial;
-  // }
-
-  // upvote(tutorialId: string, userId: string): Tutorial {
-  //   const updatedTutorial: Tutorial = this.getTutorial(tutorialId);
-  //   if (updatedTutorial.downvotes.includes(userId)) {
-  //     console.log('a user cannot vote twice to the same tutorial');
-  //     return updatedTutorial;
-  //   }
-
-  //   if (updatedTutorial.upvotes.includes(userId)) {
-  //     updatedTutorial.upvotes = updatedTutorial.upvotes.filter(
-  //       user => user !== userId,
-  //     );
-  //   } else {
-  //     updatedTutorial.upvotes.push(userId);
-  //   }
-
-  //   const tutorialArray: Tutorial[] = this.tutorials.filter(
-  //     tutorial => tutorial.id !== tutorialId,
-  //   );
-  //   tutorialArray.push(updatedTutorial);
-  //   this.tutorials = tutorialArray;
-  //   return updatedTutorial;
-  // }
-
-  // downvote(tutorialId: string, userId: string): Tutorial {
-  //   const updatedTutorial: Tutorial = this.getTutorial(tutorialId);
-  //   if (
-  //     updatedTutorial.downvotes.includes(userId) ||
-  //     updatedTutorial.upvotes.includes(userId)
-  //   ) {
-  //     console.log('a user cannot vote twice to the same tutorial');
-  //     return updatedTutorial;
-  //   }
-
-  //   if (updatedTutorial.downvotes.includes(userId)) {
-  //     updatedTutorial.downvotes = updatedTutorial.downvotes.filter(
-  //       user => user !== userId,
-  //     );
-  //   } else {
-  //     updatedTutorial.downvotes.push(userId);
-  //   }
-
-  //   const tutorialArray: Tutorial[] = this.tutorials.filter(
-  //     tutorial => tutorial.id !== tutorialId,
-  //   );
-  //   tutorialArray.push(updatedTutorial);
-  //   this.tutorials = tutorialArray;
-  //   return updatedTutorial;
-  // }
 }

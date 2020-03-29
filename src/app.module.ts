@@ -8,6 +8,7 @@ import { TopicModule } from './topic/topic.module';
 import { DalModule } from './dal/dal.module';
 import { UserModule } from './user/user.module';
 import { TagModule } from './tag/tag.module';
+import { VoteModule } from './vote/vote.module';
 
 @Module({
   imports: [
@@ -22,12 +23,14 @@ import { TagModule } from './tag/tag.module';
       autoSchemaFile: 'schema.gql',
       debug: true,
       playground: true,
+      context: ({ req, res }) => ({ req, res }),
     }),
     DalModule,
     TopicModule,
     TutorialModule,
     UserModule,
     TagModule,
+    VoteModule,
   ],
   controllers: [AppController],
   providers: [AppService],
