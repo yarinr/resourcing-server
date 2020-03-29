@@ -24,11 +24,6 @@ export class TutorialResolver {
     return this.tutorialService.getTutorialbyId(id);
   }
 
-  @Query(returns => Tutorial)
-  async tutorial() {
-    return [];
-  }
-
   @Mutation(returns => Tutorial)
   async updateTutorialStatus(
     @Args('id') id: string,

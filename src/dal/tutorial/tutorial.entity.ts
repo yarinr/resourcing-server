@@ -51,6 +51,7 @@ export class Tutorial {
   @OneToMany(
     type => Comment,
     comment => comment.tutorial,
+    { cascade: true, eager: true },
   )
   comments?: Comment[];
 

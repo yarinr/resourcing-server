@@ -39,12 +39,13 @@ type Mutation {
   toggleBookmark(tutorialId: String!): User
   createTag(tagName: String!): Tag!
   updateTagStatus(status: String!, tagName: String!): Tag!
+  addNewComment(tutorialId: String!, content: String!): Comment!
+  deleteComment(id: String!): String!
 }
 
 type Query {
   tutorials: [Tutorial!]!
   tutorialById(id: String!): Tutorial!
-  tutorial: Tutorial!
   topics: [Topic!]!
   topicByName(topicName: String!): Topic
   tutorialsByTag(tagName: String!): [Tutorial!]
@@ -55,6 +56,8 @@ type Query {
   tags: [Tag!]!
   TagsByName(tagName: String!): Tag
   TagsByStatus(status: String!): [Tag!]
+  comments: [Comment!]!
+  commentById(id: String!): Comment!
 }
 
 type Tag {
