@@ -2,60 +2,124 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
+import { UserLevel } from '../utils.entity';
+import { Tutorial } from '../tutorial/tutorial.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+    @InjectRepository(Tutorial)
+    private readonly tutorialRepository: Repository<Tutorial>,
+  ) {
+    this.userRepository.save(
+      new User('Amir Halabi', 'amir_halabi', 'amir@gmail.com', UserLevel.ADMIN),
+    );
+    this.userRepository.save(
+      new User(
+        'Ofir Cohen',
+        'ofir_cohen',
+        'ofir2161324@gmail.com',
+        UserLevel.ADMIN,
+      ),
+    );
+    this.userRepository.save(
+      new User('Gaya Simner', 'gaya_simner', 'gaya@gmail.com', UserLevel.ADMIN),
+    );
+    this.userRepository.save(
+      new User(
+        'Yarin Ronel',
+        'yarin_ronel',
+        'yarin@gmail.com',
+        UserLevel.ADMIN,
+      ),
+    );
+  }
 
-  // getUser(id: string): User {
-  //   return this.users.find(user => user.id === id);
-  // }
+  async getAllUsers(): Promise<User[]> {
+    return await this.userRepository.find();
+  }
 
-  // deleteUser(id: string): User {
-  //   const removedUser: User = this.getUser(id);
-  //   this.users = this.users.filter(user => user.id !== id);
-  //   return removedUser;
-  // }
+  async getUser(id: string): Promise<User | void> {
+    return (await this.userRepository
+      .findOne(id)
+      .catch((error: Error) => console.log(error.message)))
+      ? await this.userRepository
+          .findOne(id)
+          .catch((error: Error) => console.log(error.message))
+      : undefined;
+  }
 
-  // register(createUser: CreateUserDTO): User {
-  //   let newUser = new User(createUser);
-  //   this.users.push(newUser);
-  //   return newUser;
-  // }
+  async deleteUser(id: string): Promise<User> {
+    const deletedUser = await this.userRepository.findOne(id);
+    await this.userRepository
+      .remove(deletedUser)
+      .then(user =>
+        console.log('user with id: ' + user.id + 'removed successfuly'),
+      )
+      .catch((error: Error) => console.log(error.message));
+    return deletedUser;
+  }
 
-  // addBookmark(userId: string, tutorialId: string): User {
-  //   const updatedUser: User = this.deleteUser(userId);
-  //   updatedUser.bookmarkIds.push(tutorialId);
-  //   this.users.push(updatedUser);
-  //   return updatedUser;
-  // }
+  async register(
+    name: string,
+    userName: string,
+    mail: string,
+    userLevel: UserLevel,
+  ): Promise<User | void> {
+    const newUser = new User(name, userName, mail, userLevel);
+    await this.userRepository
+      .save(newUser)
+      .then(user =>
+        console.log('user with id: ' + user.id + ' created successfuly'),
+      )
+      .catch((error: Error) => console.log(error.message));
+    return await this.getUser(newUser.id);
+  }
 
-  // deleteBookmark(userId: string, tutorialId: string): User {
-  //   const updatedUser: User = this.deleteUser(userId);
-  //   updatedUser.bookmarkIds = updatedUser.bookmarkIds.filter(
-  //     tutorial => tutorial !== tutorialId,
-  //   );
-  //   this.users.push(updatedUser);
-  //   return updatedUser;
-  // }
+  async toggleBookmark(
+    userId: string,
+    tutorialId: string,
+  ): Promise<User | void> {
+    // TO DO: update when tutorial service exists
+    // const tutorial: Tutorial = await this.tutorialService.getTutorial(tutorialId);
+    const tutorial: Tutorial | void = await this.tutorialRepository
+      .findOne(tutorialId)
+      .catch((error: Error) => console.log(error.message + 'bla'));
 
-  // addTutorial(userId: string, tutorialId: string): User {
-  //   const updatedUser: User = this.getUser(userId);
-  //   this.users = this.users.filter(user => user.id !== userId);
-  //   updatedUser.tutorialIds.push(tutorialId);
-  //   this.users.push(updatedUser);
-  //   return updatedUser;
-  // }
+    const updatedUser: User | void = await this.getUser(userId);
 
-  // deleteTutorial(userId: string, tutorialId: string): User {
-  //   const updatedUser: User = this.deleteUser(userId);
-  //   updatedUser.tutorialIds = updatedUser.tutorialIds.filter(
-  //     tutorial => tutorial !== tutorialId,
-  //   );
-  //   this.users.push(updatedUser);
-  //   return updatedUser;
-  // }
+    if (!tutorial || !updatedUser) {
+      console.log(
+        updatedUser
+          ? 'user with id: ' + userId + ' found in db'
+          : 'user with id: ' + userId + ' not found in db',
+      );
+      console.log(
+        tutorial
+          ? 'tutorial with id: ' + tutorialId + ' found in db'
+          : 'tutorial with id: ' + tutorialId + ' not found in db',
+      );
+      return undefined;
+    } else {
+      if (
+        updatedUser.bookmarks.map(tutorial => tutorial.id).includes(tutorialId)
+      ) {
+        console.log(
+          'REMOVING tutorial with id {tutorialId} from bookmarks in user with id {userId}',
+        );
+        updatedUser.bookmarks = updatedUser.bookmarks.filter(
+          tutorial => tutorial.id !== tutorialId,
+        );
+      } else {
+        console.log(
+          'ADDING tutorial with id {tutorialId} to bookmarks in user with id {userId}',
+        );
+        updatedUser.bookmarks.push(tutorial);
+      }
+      await this.userRepository.save(updatedUser);
+      return await this.getUser(updatedUser.id);
+    }
+  }
 }

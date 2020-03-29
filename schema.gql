@@ -31,10 +31,12 @@ scalar DateTime
 type Mutation {
   createTopic(category: String!, icon: String!, name: String!): Topic!
   updateTopicStatus(status: String!, topicName: String!): Topic!
+  registerUser(mail: String!, userName: String!, name: String!): User!
+  addNewAdmin(mail: String!, userName: String!, name: String!): User!
+  toggleBookmark(tutorialId: String!, userId: String!): User
 }
 
 type Query {
-  users: [User!]!
   tutorials: [Tutorial!]!
   tutorial: Tutorial!
   topics: [Topic!]!
@@ -42,6 +44,8 @@ type Query {
   tutorialsByTag(tagName: String!): [Tutorial!]
   TopicsByStatus(status: String!): [Topic!]
   TopicsByCategory(category: String!): [Topic!]
+  users: [User!]!
+  userById(userId: String!): User
 }
 
 type Topic {
@@ -72,11 +76,17 @@ type User {
   name: String!
   userName: String!
   mail: String!
-  tutorials: [Tutorial!]
-  comments: [Comment!]
-  bookmarks: [Tutorial!]
-  votes: [Vote!]
+  tutorials: [Tutorial!]!
+  comments: [Comment!]!
+  bookmarks: [Tutorial!]!
+  votes: [Vote!]!
   score: Int!
+  userLevel: UserLevel!
+}
+
+enum UserLevel {
+  ADMIN
+  USER
 }
 
 type Vote {

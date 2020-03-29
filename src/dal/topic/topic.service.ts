@@ -37,20 +37,28 @@ export class TopicService {
     icon: string,
     category: Category,
   ): Promise<Topic> {
-    const topic = new Topic(name, icon, category);
-    return await this.topicRepository.save(topic);
+    const newTopic = new Topic(name, icon, category);
+    await this.topicRepository
+      .save(newTopic)
+      .then(topic =>
+        console.log('topic with name: ' + topic.name + ' created successfuly'),
+      )
+      .catch((error: Error) => console.log(error.message));
+    return await this.getTopic(newTopic.name);
   }
 
   async getTopicsByStatus(status: ApprovalStatus): Promise<Topic[]> {
     return await this.topicRepository
-      .createQueryBuilder()
+      .createQueryBuilder('topic')
+      .leftJoinAndSelect('topic.tutorials', 'tutorial')
       .where('topic.approvalStatusCode = :status', { status })
       .getMany();
   }
 
   async getTopicsByCategory(category: Category): Promise<Topic[]> {
     return await this.topicRepository
-      .createQueryBuilder()
+      .createQueryBuilder('topic')
+      .leftJoinAndSelect('topic.tutorials', 'tutorial')
       .where('topic.category = :category', { category })
       .getMany();
   }
@@ -59,9 +67,11 @@ export class TopicService {
     topicName: string,
     status: ApprovalStatus,
   ): Promise<Topic> {
-    await this.topicRepository.update(topicName, {
-      approvalStatusCode: status,
-    });
+    await this.topicRepository
+      .update(topicName, {
+        approvalStatusCode: status,
+      })
+      .catch((error: Error) => console.log(error.message));
 
     return await this.getTopic(topicName);
   }

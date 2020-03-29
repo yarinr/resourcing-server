@@ -15,7 +15,7 @@ import { Tutorial } from '../tutorial/tutorial.entity';
 export class Vote {
   @Field(type => ID)
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
   @Field(type => User)
   @ManyToOne(
