@@ -5,6 +5,7 @@ import {
   Args,
   Parent,
   ResolveProperty,
+  Context,
 } from '@nestjs/graphql';
 
 import { User } from 'src/dal/user/user.entity';
@@ -71,9 +72,9 @@ export class UserResolver {
 
   @Mutation(() => User, { nullable: true })
   async toggleBookmark(
-    @Args('userId') userId: string,
     @Args('tutorialId') tutorialId: string,
+    @Context('userId') userID: string,
   ) {
-    return await this.userService.toggleBookmark(userId, tutorialId);
+    return await this.userService.toggleBookmark(userID, tutorialId);
   }
 }

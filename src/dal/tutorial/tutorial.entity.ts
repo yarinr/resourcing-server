@@ -89,4 +89,13 @@ export class Tutorial {
   @Field(type => ApprovalStatus)
   @Column({ type: 'simple-enum', enum: ApprovalStatus })
   approvalStatusCode: string;
+
+  @Field(type => [User])
+  @ManyToMany(
+    type => User,
+    user => user.bookmarks,
+    { cascade: true, eager: true },
+  )
+  @JoinTable()
+  bookmarked: User[];
 }

@@ -119,6 +119,6 @@ mutation AddTutorial2 {
 }
 
 mutation deleteTutorial{
-  deletTutorial(id:"5")
+  deleteTutorial(id:"5")
 }
 

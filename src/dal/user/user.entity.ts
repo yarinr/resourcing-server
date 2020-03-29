@@ -5,6 +5,8 @@ import {
   Column,
   OneToMany,
   Unique,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { Vote } from '../vote/vote.entity';
 import { Comment } from '../comment/comment.entity';
@@ -26,7 +28,6 @@ export class User {
     this.userName = userName;
     this.mail = mail;
     this.score = 0;
-    this.bookmarks = [];
     this.userLevel = userLevel;
   }
 
@@ -61,7 +62,12 @@ export class User {
   )
   comments?: Comment[];
 
-  @Field(type => [Tutorial])
+  @Field(type => [Tutorial, { nullable: true }], { nullable: true })
+  @ManyToMany(
+    type => Tutorial,
+    tutorial => tutorial.bookmarked,
+  )
+  @JoinTable()
   bookmarks?: Tutorial[];
 
   @Field(type => [Vote])

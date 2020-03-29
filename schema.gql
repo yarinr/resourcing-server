@@ -31,12 +31,12 @@ scalar DateTime
 type Mutation {
   updateTutorialStatus(status: String!, id: String!): Tutorial!
   addTutorial(tags: [String!]!, desc: String!, url: String!, title: String!): Tutorial!
-  deletTutorial(id: String!): String!
+  deleteTutorial(id: String!): String!
   createTopic(category: String!, icon: String!, name: String!): Topic!
   updateTopicStatus(status: String!, topicName: String!): Topic!
   registerUser(mail: String!, userName: String!, name: String!): User!
   addNewAdmin(mail: String!, userName: String!, name: String!): User!
-  toggleBookmark(tutorialId: String!, userId: String!): User
+  toggleBookmark(tutorialId: String!): User
   createTag(tagName: String!): Tag!
   updateTagStatus(status: String!, tagName: String!): Tag!
 }
@@ -84,6 +84,7 @@ type Tutorial {
   user: User!
   tags: [Tag!]!
   approvalStatusCode: ApprovalStatus!
+  bookmarked: [User!]!
 }
 
 type User {
@@ -93,7 +94,7 @@ type User {
   mail: String!
   tutorials: [Tutorial!]
   comments: [Comment!]!
-  bookmarks: [Tutorial!]!
+  bookmarks: [Tutorial!]
   votes: [Vote!]!
   score: Int!
   userLevel: UserLevel!
