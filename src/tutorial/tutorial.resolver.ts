@@ -5,15 +5,27 @@ import {
   Mutation,
   ArgsOptions,
   Context,
+  ResolveProperty,
+  Parent,
 } from '@nestjs/graphql';
 
 import { TutorialService } from '../dal/tutorial/tutorial.service';
 import { Tutorial } from 'src/dal/tutorial/tutorial.entity';
-import { ApprovalStatus } from 'src/dal/utils.entity';
+import { ApprovalStatus, VoteType } from 'src/dal/utils.entity';
 
-@Resolver()
+@Resolver(Tutorial)
 export class TutorialResolver {
   constructor(private readonly tutorialService: TutorialService) {}
+
+  @ResolveProperty('score')
+  async score(@Parent() tutorial: Tutorial) {
+    const score: number = tutorial.votes?.reduce((voteAcc: number, vote) => {
+      return (voteAcc =
+        vote.type === VoteType.Upvote ? voteAcc + 1 : voteAcc - 1);
+    }, 0);
+    return score ? score : 0;
+  }
+
   @Query(returns => [Tutorial])
   async tutorials() {
     return this.tutorialService.getAllTutorials();
