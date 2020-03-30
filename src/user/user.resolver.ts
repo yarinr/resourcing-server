@@ -73,8 +73,11 @@ export class UserResolver {
   @Mutation(() => User, { nullable: true })
   async toggleBookmark(
     @Args('tutorialId') tutorialId: string,
-    @Context('userId') userID: string,
+    @Context() context: any,
   ) {
-    return await this.userService.toggleBookmark(userID, tutorialId);
+    return await this.userService.toggleBookmark(
+      context.req.header('userID'),
+      tutorialId,
+    );
   }
 }

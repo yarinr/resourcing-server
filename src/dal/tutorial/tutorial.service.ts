@@ -15,16 +15,7 @@ export class TutorialService {
     private readonly tutorialRepository: Repository<Tutorial>,
     private userService: UserService,
     private tagService: TagService,
-  ) {
-    const tutorial = new Tutorial(
-      'python4beginners',
-      'https://www.python.org/about/gettingstarted/',
-      'learn python quickly',
-    );
-    const tag1 = new Tag('Python');
-    tutorial.tags = [tag1];
-    this.tutorialRepository.save(tutorial);
-  }
+  ) {}
 
   // Queries
   async getAllTutorials() {
