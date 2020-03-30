@@ -102,9 +102,10 @@ export class UserService {
       );
       return undefined;
     } else {
-      if (
-        updatedUser.bookmarks.map(tutorial => tutorial.id).includes(tutorialId)
-      ) {
+      const isAlreadyExist: boolean = updatedUser.bookmarks
+        .flatMap(tutorial => tutorial.id.toString())
+        .includes(tutorialId);
+      if (isAlreadyExist) {
         console.log(
           'REMOVING tutorial with id ' +
             tutorialId +
@@ -112,7 +113,7 @@ export class UserService {
             userId,
         );
         updatedUser.bookmarks = updatedUser.bookmarks.filter(
-          tutorial => tutorial.id !== tutorialId,
+          tutorial => tutorial.id.toString() !== tutorialId,
         );
       } else {
         console.log(

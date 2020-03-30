@@ -58,7 +58,6 @@ export class Tutorial {
   @OneToMany(
     type => Vote,
     vote => vote.tutorial,
-    { cascade: true, eager: true },
   )
   votes?: Vote[];
 

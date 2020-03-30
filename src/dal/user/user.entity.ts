@@ -73,7 +73,6 @@ export class User {
   @OneToMany(
     type => Vote,
     vote => vote.user,
-    { cascade: true, eager: true },
   )
   votes?: Vote[];
 

@@ -3,13 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tutorial } from 'src/dal/tutorial/tutorial.entity';
 import { Tag } from '../tag/tag.entity';
-import { ApprovalStatus } from '../utils.entity';
+import { ApprovalStatus, VoteType } from '../utils.entity';
 import { TagService } from '../tag/tag.service';
 import { UserService } from '../user/user.service';
 
 @Injectable()
 export class TutorialService {
-  private readonly relations = { relations: ['comments'] };
+  private readonly relations = { relations: ['comments', 'votes'] };
   constructor(
     @InjectRepository(Tutorial)
     private readonly tutorialRepository: Repository<Tutorial>,
@@ -70,5 +70,15 @@ export class TutorialService {
       throw JSON.stringify(e);
     });
     return 'delete succesfull';
+  }
+
+  async calculateScore(tutorialId: string): Promise<number> {
+    const score: number = await (
+      await this.getTutorialbyId(tutorialId)
+    ).votes?.reduce((voteAcc: number, vote) => {
+      return (voteAcc =
+        vote.type === VoteType.Upvote ? voteAcc + 1 : voteAcc - 1);
+    }, 0);
+    return score ? score : 0;
   }
 }

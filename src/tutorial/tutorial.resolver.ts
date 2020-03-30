@@ -19,11 +19,7 @@ export class TutorialResolver {
 
   @ResolveProperty('score')
   async score(@Parent() tutorial: Tutorial) {
-    const score: number = tutorial.votes?.reduce((voteAcc: number, vote) => {
-      return (voteAcc =
-        vote.type === VoteType.Upvote ? voteAcc + 1 : voteAcc - 1);
-    }, 0);
-    return score ? score : 0;
+    return await this.tutorialService.calculateScore(tutorial.id);
   }
 
   @Query(returns => [Tutorial])

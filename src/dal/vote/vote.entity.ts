@@ -23,6 +23,7 @@ export class Vote {
   @ManyToOne(
     type => User,
     user => user.votes,
+    { cascade: true, eager: true },
   )
   user: User;
 
@@ -30,6 +31,7 @@ export class Vote {
   @ManyToOne(
     type => Tutorial,
     tutorial => tutorial.votes,
+    { cascade: true, eager: true },
   )
   tutorial: Tutorial;
 
