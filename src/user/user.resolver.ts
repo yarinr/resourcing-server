@@ -48,12 +48,9 @@ export class UserResolver {
     @Args('userName') userName: string,
     @Args('mail') mail: string,
   ) {
-    return await this.userService.register(
-      name,
-      userName,
-      mail,
-      UserLevel.USER,
-    );
+    return await this.userService
+      .register(name, userName, mail, UserLevel.USER)
+      .catch((e: Error) => e);
   }
 
   @Mutation(() => User)
@@ -62,12 +59,9 @@ export class UserResolver {
     @Args('userName') userName: string,
     @Args('mail') mail: string,
   ) {
-    return await this.userService.register(
-      name,
-      userName,
-      mail,
-      UserLevel.ADMIN,
-    );
+    return await this.userService
+      .register(name, userName, mail, UserLevel.ADMIN)
+      .catch((e: Error) => e);
   }
 
   @Mutation(() => User, { nullable: true })

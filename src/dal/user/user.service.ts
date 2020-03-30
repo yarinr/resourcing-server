@@ -65,14 +65,16 @@ export class UserService {
     userName: string,
     mail: string,
     userLevel: UserLevel,
-  ): Promise<User | void> {
+  ): Promise<User> {
     const newUser = new User(name, userName, mail, userLevel);
     await this.userRepository
       .save(newUser)
-      .then(user =>
-        console.log('user with id: ' + user.id + ' created successfuly'),
-      )
-      .catch((error: Error) => console.log(error.message));
+      .then(async user => {
+        console.log('user with id: ' + user.id + ' created successfuly');
+      })
+      .catch((error: Error) => {
+        throw error;
+      });
     return await this.getUser(newUser.id);
   }
 

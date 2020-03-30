@@ -60,7 +60,8 @@ export class TutorialService {
       }
       tutorial.tags = tags;
       tutorial.user = user;
-      return await this.tutorialRepository.save(tutorial);
+      await this.tutorialRepository.save(tutorial);
+      return await this.getTutorialbyId(tutorial.id);
     }
   }
 
