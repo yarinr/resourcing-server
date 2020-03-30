@@ -1,0 +1,183 @@
+query tutorials {
+  tutorials {
+    id
+    title
+    url
+    description
+    submittedAt
+    score
+    views
+    approvalStatusCode
+    user {
+      id
+      userName
+    }
+    comments {
+      id
+      content
+      user {
+        id
+      }
+    }
+    votes {
+      id
+      type
+      # user{
+      #   id
+      # }
+    }
+    tags {
+      name
+    }
+  }
+}
+
+mutation AddTutorial1 {
+  addTutorial(
+    title: "javaScript"
+    url: "https://javascript.info/"
+    desc: "somthing"
+    tags: ["Java Script", "ECMA6", "CSS"]
+  ) {
+    id
+    title
+    url
+    description
+    submittedAt
+    score
+    views
+    approvalStatusCode
+    user {
+      id
+      userName
+    }
+    comments {
+      id
+      content
+      user {
+        id
+      }
+    }
+    votes {
+      id
+      type
+      # user{
+      #   id
+      # }
+    }
+    tags {
+      name
+    }
+  }
+}
+
+mutation AddTutorial2 {
+  addTutorial(
+    title: "python4beginners"
+    url: "https://www.python.org/about/gettingstarted/"
+    desc: "learn python quickly"
+    tags: ["Python", "3.4"]
+  ) {
+    id
+    title
+    url
+    description
+    submittedAt
+    score
+    views
+    approvalStatusCode
+    user {
+      id
+      userName
+    }
+    comments {
+      id
+      content
+      user {
+        id
+      }
+    }
+    votes {
+      id
+      type
+      # user{
+      #   id
+      # }
+    }
+    tags {
+      name
+    }
+  }
+}
+
+query getTutorialById {
+  tutorialById(id: "1") {
+    id
+    title
+    url
+    description
+    submittedAt
+    score
+    views
+    approvalStatusCode
+    user {
+      id
+      userName
+    }
+    comments {
+      id
+      content
+      user {
+        id
+      }
+    }
+    votes {
+      id
+      type
+      # user{
+      #   id
+      # }
+    }
+    tags {
+      name
+    }
+  }
+}
+
+mutation updateTutorialStatus {
+  updateTutorialStatus(id: "1", status: "approved") {
+    id
+    title
+    url
+    description
+    submittedAt
+    score
+    views
+    approvalStatusCode
+    user {
+      id
+      userName
+    }
+    comments {
+      id
+      content
+      user {
+        id
+      }
+    }
+    votes {
+      id
+      type
+      # user{
+      #   id
+      # }
+    }
+    tags {
+      name
+    }
+  }
+}
+
+mutation deleteTutorial {
+  deleteTutorial(id: "1")
+}

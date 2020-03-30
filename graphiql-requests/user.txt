@@ -1,0 +1,128 @@
+query users {
+  users {
+    id
+    name
+    userName
+    mail
+    score
+    userLevel
+    tutorials {
+      id
+      title
+      tags {
+        name
+      }
+    }
+    bookmarks {
+      id
+      title
+    }
+    comments {
+      id
+      tutorial{
+        title
+      }
+    }
+    votes {
+      id
+      type
+      # tutorial {
+      #   id
+      # }
+    }
+  }
+}
+
+query userById {
+  userById(userId: "1") {
+    id
+    name
+    userName
+    mail
+    score
+    userLevel
+    tutorials {
+      id
+    }
+    bookmarks {
+      id
+    }
+    comments {
+      id
+      tutorial {
+        id
+      }
+    }
+    votes {
+      id
+      type
+      # tutorial {
+      #   id
+      # }
+    }
+  }
+}
+
+mutation register {
+  registerUser(
+    mail: "basicuser@gmail.com"
+    name: "basic user"
+    userName: "basic_user"
+  ) {
+    id
+    name
+    userName
+    mail
+    score
+    userLevel
+    tutorials {
+      id
+    }
+    bookmarks {
+      id
+    }
+    comments {
+      id
+      tutorial {
+        id
+      }
+    }
+    votes {
+      id
+      type
+      # tutorial {
+      #   id
+      # }
+    }
+  }
+}
+
+mutation bookmark {
+  toggleBookmark(tutorialId: "1") {
+    id
+    name
+    userName
+    mail
+    score
+    userLevel
+    tutorials {
+      id
+    }
+    bookmarks {
+      id
+    }
+    comments {
+      id
+      tutorial {
+        id
+      }
+    }
+    votes {
+      id
+      type
+      # tutorial {
+      #   id
+      # }
+    }
+  }
+}

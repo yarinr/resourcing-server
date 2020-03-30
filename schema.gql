@@ -39,6 +39,8 @@ type Mutation {
   toggleBookmark(tutorialId: String!): User
   createTag(tagName: String!): Tag!
   updateTagStatus(status: String!, tagName: String!): Tag!
+  addVote(tutorialId: String!, voteType: String!): Vote!
+  removeVote(voteId: String!): Vote!
   addNewComment(tutorialId: String!, content: String!): Comment!
   deleteComment(id: String!): String!
 }
@@ -56,6 +58,10 @@ type Query {
   TagsByName(tagName: String!): Tag
   TagsByStatus(status: String!): [Tag!]
   tutorialsByTag(tagName: String!): [Tutorial!]
+  votes: [Vote!]!
+  userVoteHistory(userId: String!): [Vote!]
+  getVoteById(voteId: String!): Vote
+  getTutorialVotes(tutorialId: String!): [Vote!]!
   comments: [Comment!]!
   commentById(id: String!): Comment!
 }

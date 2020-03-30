@@ -1,0 +1,39 @@
+query tags {
+  tags {
+    name
+    approvalStatusCode
+    tutorials {
+      id
+    }
+  }
+}
+
+mutation createTag {
+  createTag(tagName: "something") {
+    name
+    approvalStatusCode
+    tutorials {
+      id
+    }
+  }
+}
+
+query getTagsByStatus {
+  TagsByStatus(status: "pending") {
+    name
+    approvalStatusCode
+    tutorials {
+      id
+    }
+  }
+}
+
+mutation updateTagStatus {
+  updateTagStatus(tagName: "css", status: "approved") {
+    name
+    approvalStatusCode
+    tutorials {
+      id
+    }
+  }
+}
