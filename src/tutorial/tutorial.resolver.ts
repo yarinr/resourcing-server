@@ -5,15 +5,23 @@ import {
   Mutation,
   ArgsOptions,
   Context,
+  ResolveProperty,
+  Parent,
 } from '@nestjs/graphql';
 
 import { TutorialService } from '../dal/tutorial/tutorial.service';
 import { Tutorial } from 'src/dal/tutorial/tutorial.entity';
-import { ApprovalStatus } from 'src/dal/utils.entity';
+import { ApprovalStatus, VoteType } from 'src/dal/utils.entity';
 
-@Resolver()
+@Resolver(Tutorial)
 export class TutorialResolver {
   constructor(private readonly tutorialService: TutorialService) {}
+
+  @ResolveProperty('score')
+  async score(@Parent() tutorial: Tutorial) {
+    return await this.tutorialService.calculateScore(tutorial.id);
+  }
+
   @Query(returns => [Tutorial])
   async tutorials() {
     return this.tutorialService.getAllTutorials();
@@ -22,11 +30,6 @@ export class TutorialResolver {
   @Query(returns => Tutorial)
   async tutorialById(@Args('id') id: string) {
     return this.tutorialService.getTutorialbyId(id);
-  }
-
-  @Query(returns => Tutorial)
-  async tutorial() {
-    return [];
   }
 
   @Mutation(returns => Tutorial)
@@ -55,7 +58,7 @@ export class TutorialResolver {
   }
 
   @Mutation(returns => String)
-  async deletTutorial(@Args('id') id: string) {
+  async deleteTutorial(@Args('id') id: string) {
     return this.tutorialService.deleteTutorial(id);
   }
 }

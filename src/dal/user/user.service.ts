@@ -7,13 +7,16 @@ import { Tutorial } from '../tutorial/tutorial.entity';
 
 @Injectable()
 export class UserService {
+  private readonly relations = {
+    relations: ['tutorials', 'bookmarks', 'comments', 'votes'],
+  };
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Tutorial)
     private readonly tutorialRepository: Repository<Tutorial>,
   ) {
-    const user1 = this.userRepository.save(
+    this.userRepository.save(
       new User('Amir Halabi', 'amir_halabi', 'amir@gmail.com', UserLevel.ADMIN),
     );
     this.userRepository.save(
@@ -38,17 +41,12 @@ export class UserService {
   }
 
   async getAllUsers(): Promise<User[]> {
-    return await this.userRepository.find({ relations: ['tutorials'] });
+    return await this.userRepository.find(this.relations);
   }
 
-  async getUser(id: string): Promise<User | void> {
-    return (await this.userRepository
-      .findOne(id, { relations: ['tutorials'] })
-      .catch((error: Error) => console.log(error.message)))
-      ? await this.userRepository
-          .findOne(id)
-          .catch((error: Error) => console.log(error.message))
-      : undefined;
+  async getUser(id: string): Promise<User> {
+    const user = await this.userRepository.findOne(id, this.relations);
+    return user ? user : undefined;
   }
 
   async deleteUser(id: string): Promise<User> {
@@ -67,14 +65,16 @@ export class UserService {
     userName: string,
     mail: string,
     userLevel: UserLevel,
-  ): Promise<User | void> {
+  ): Promise<User> {
     const newUser = new User(name, userName, mail, userLevel);
     await this.userRepository
       .save(newUser)
-      .then(user =>
-        console.log('user with id: ' + user.id + ' created successfuly'),
-      )
-      .catch((error: Error) => console.log(error.message));
+      .then(async user => {
+        console.log('user with id: ' + user.id + ' created successfuly');
+      })
+      .catch((error: Error) => {
+        throw error;
+      });
     return await this.getUser(newUser.id);
   }
 
@@ -82,16 +82,13 @@ export class UserService {
     userId: string,
     tutorialId: string,
   ): Promise<User | void> {
-    // TO DO: update when tutorial service exists
-    // const tutorial: Tutorial = await this.tutorialService.getTutorial(tutorialId);
     const tutorial: Tutorial | void = await this.tutorialRepository
       .findOne(tutorialId)
       .catch((error: Error) =>
-        console.log(error.message + 'error during toggle'),
+        console.log(error.message + 'error accured during toggle'),
       );
 
-    const updatedUser: User | void = await this.getUser(userId);
-
+    const updatedUser: User = await this.getUser(userId);
     if (!tutorial || !updatedUser) {
       console.log(
         updatedUser
@@ -105,18 +102,25 @@ export class UserService {
       );
       return undefined;
     } else {
-      if (
-        updatedUser.bookmarks.map(tutorial => tutorial.id).includes(tutorialId)
-      ) {
+      const isAlreadyExist: boolean = updatedUser.bookmarks
+        .flatMap(tutorial => tutorial.id.toString())
+        .includes(tutorialId);
+      if (isAlreadyExist) {
         console.log(
-          'REMOVING tutorial with id {tutorialId} from bookmarks in user with id {userId}',
+          'REMOVING tutorial with id ' +
+            tutorialId +
+            ' from bookmarks in user with id ' +
+            userId,
         );
         updatedUser.bookmarks = updatedUser.bookmarks.filter(
-          tutorial => tutorial.id !== tutorialId,
+          tutorial => tutorial.id.toString() !== tutorialId,
         );
       } else {
         console.log(
-          'ADDING tutorial with id {tutorialId} to bookmarks in user with id {userId}',
+          'ADDING tutorial with id ' +
+            tutorialId +
+            ' to bookmarks in user with id ' +
+            userId,
         );
         updatedUser.bookmarks.push(tutorial);
       }

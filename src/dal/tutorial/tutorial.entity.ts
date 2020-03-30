@@ -11,11 +11,9 @@ import {
 } from 'typeorm';
 import { Vote } from '../vote/vote.entity';
 import { User } from '../user/user.entity';
-import { Topic } from '../topic/topic.entity';
 import { Comment } from '../comment/comment.entity';
 import { ApprovalStatus } from '../utils.entity';
 import { Tag } from '../tag/tag.entity';
-import { TagService } from '../tag/tag.service';
 
 @ObjectType()
 @Entity()
@@ -60,7 +58,6 @@ export class Tutorial {
   @OneToMany(
     type => Vote,
     vote => vote.tutorial,
-    { cascade: true, eager: true },
   )
   votes?: Vote[];
 
@@ -91,4 +88,13 @@ export class Tutorial {
   @Field(type => ApprovalStatus)
   @Column({ type: 'simple-enum', enum: ApprovalStatus })
   approvalStatusCode: string;
+
+  @Field(type => [User], { nullable: true })
+  @ManyToMany(
+    type => User,
+    user => user.bookmarks,
+    { cascade: true, eager: true },
+  )
+  @JoinTable()
+  bookmarked: User[];
 }

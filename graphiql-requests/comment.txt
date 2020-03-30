@@ -1,0 +1,42 @@
+query comments {
+  comments {
+    id
+    tutorial {
+      title
+    }
+    user {
+      userName
+    }
+    postedAt
+  }
+}
+
+query commentById {
+  commentById(id: "1") {
+    id
+    tutorial {
+      title
+    }
+    user {
+      userName
+    }
+    postedAt
+  }
+}
+
+mutation createComment {
+  addNewComment(tutorialId: "1", content: "first comment !!!") {
+    id
+    tutorial {
+      title
+    }
+    user {
+      userName
+    }
+    postedAt
+  }
+}
+
+mutation deleteComment {
+  deleteComment(id: "1")
+}

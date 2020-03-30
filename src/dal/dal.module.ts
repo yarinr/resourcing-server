@@ -11,6 +11,7 @@ import { UserService } from './user/user.service';
 import { TagService } from './tag/tag.service';
 import { Tag } from './tag/tag.entity';
 import { VoteService } from './vote/vote.service';
+import { CommentService } from './comment/comment.service';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { VoteService } from './vote/vote.service';
     UserService,
     TagService,
     VoteService,
+    CommentService,
   ],
   exports: [
     TopicService,
@@ -29,6 +31,7 @@ import { VoteService } from './vote/vote.service';
     UserService,
     TagService,
     VoteService,
+    CommentService,
   ],
 })
 export class DalModule {}

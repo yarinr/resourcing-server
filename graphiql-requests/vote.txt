@@ -1,0 +1,83 @@
+query votes {
+  votes {
+    id
+    user {
+      id
+    }
+    type
+    tutorial {
+      id
+    }
+    votedAt
+  }
+}
+
+query userVoteHistory {
+  userVoteHistory(userId: "1") {
+    id
+    user {
+      id
+    }
+    type
+    tutorial {
+      id
+    }
+    votedAt
+  }
+}
+
+query getVoteById {
+  getVoteById(voteId: "1") {
+    id
+    user {
+      id
+    }
+    type
+    tutorial {
+      id
+    }
+    votedAt
+  }
+}
+
+query getTutorialVotes {
+  getTutorialVotes(tutorialId: "1") {
+    id
+    user {
+      id
+    }
+    type
+    tutorial {
+      id
+    }
+    votedAt
+  }
+}
+
+mutation addVote {
+  addVote(tutorialId: "1", voteType: "upvote") {
+    id
+    user {
+      id
+    }
+    type
+    tutorial {
+      id
+    }
+    votedAt
+  }
+}
+
+mutation removeVote {
+  removeVote(voteId: "1") {
+    id
+    user {
+      id
+    }
+    type
+    tutorial {
+      id
+    }
+    votedAt
+  }
+}

@@ -1,0 +1,52 @@
+query topics {
+  topics {
+    name
+    icon
+    category
+    approvalStatusCode
+  }
+}
+
+query getTopicByName {
+  topicByName(topicName: "angular") {
+    name
+    icon
+    category
+    approvalStatusCode
+  }
+}
+
+mutation newTopic {
+  createTopic(category: "programming", name: "python", icon: "python.io") {
+    name
+    icon
+    category
+    approvalStatusCode
+  }
+}
+
+query getTopicsByCategory {
+  TopicsByCategory(category: "programming") {
+    name
+    icon
+    category
+    approvalStatusCode
+  }
+}
+
+mutation updateTopicStatus {
+  updateTopicStatus(topicName: "angular", status: "approved") {
+    name
+    icon
+    category
+    approvalStatusCode
+  }
+}
+query getTopicsByStatus {
+  TopicsByStatus(status: "approved") {
+    name
+    icon
+    category
+    approvalStatusCode
+  }
+}

@@ -49,16 +49,14 @@ export class TopicService {
 
   async getTopicsByStatus(status: ApprovalStatus): Promise<Topic[]> {
     return await this.topicRepository
-      .createQueryBuilder('topic')
-      .leftJoinAndSelect('topic.tutorials', 'tutorial')
+      .createQueryBuilder()
       .where('topic.approvalStatusCode = :status', { status })
       .getMany();
   }
 
   async getTopicsByCategory(category: Category): Promise<Topic[]> {
     return await this.topicRepository
-      .createQueryBuilder('topic')
-      .leftJoinAndSelect('topic.tutorials', 'tutorial')
+      .createQueryBuilder()
       .where('topic.category = :category', { category })
       .getMany();
   }

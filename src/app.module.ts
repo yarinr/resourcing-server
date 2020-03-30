@@ -9,6 +9,7 @@ import { DalModule } from './dal/dal.module';
 import { UserModule } from './user/user.module';
 import { TagModule } from './tag/tag.module';
 import { VoteModule } from './vote/vote.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { VoteModule } from './vote/vote.module';
     UserModule,
     TagModule,
     VoteModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

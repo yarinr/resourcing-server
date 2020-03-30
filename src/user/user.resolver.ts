@@ -5,29 +5,34 @@ import {
   Args,
   Parent,
   ResolveProperty,
+  Context,
 } from '@nestjs/graphql';
 
 import { User } from 'src/dal/user/user.entity';
 import { UserService } from 'src/dal/user/user.service';
-import { UserLevel, VoteType } from 'src/dal/utils.entity';
+import { UserLevel } from 'src/dal/utils.entity';
 import { Tutorial } from 'src/dal/tutorial/tutorial.entity';
+import { TutorialService } from 'src/dal/tutorial/tutorial.service';
 
 @Resolver(User)
 export class UserResolver {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly tutorialService: TutorialService,
+  ) {}
 
   @ResolveProperty('score')
   async score(@Parent() user: User) {
-    const tutorials: Tutorial[] = user.tutorials;
-    const score: number = tutorials?.reduce(
-      (totalAcc: number, tutorial) =>
-        totalAcc +
-        tutorial.votes?.reduce((voteAcc: number, vote) => {
-          return (voteAcc =
-            vote.type === VoteType.Upvote ? voteAcc + 1 : voteAcc - 1);
-        }, 0),
-      0,
-    );
+    const tutorials: Tutorial[] = await (
+      await this.userService.getUser(user.id)
+    ).tutorials;
+    let score: number = 0;
+    for (const tutorial of tutorials) {
+      const tutorialScore = await this.tutorialService.calculateScore(
+        tutorial.id,
+      );
+      score += tutorialScore;
+    }
     return score ? score : 0;
   }
 
@@ -47,12 +52,9 @@ export class UserResolver {
     @Args('userName') userName: string,
     @Args('mail') mail: string,
   ) {
-    return await this.userService.register(
-      name,
-      userName,
-      mail,
-      UserLevel.USER,
-    );
+    return await this.userService
+      .register(name, userName, mail, UserLevel.USER)
+      .catch((e: Error) => e);
   }
 
   @Mutation(() => User)
@@ -61,19 +63,19 @@ export class UserResolver {
     @Args('userName') userName: string,
     @Args('mail') mail: string,
   ) {
-    return await this.userService.register(
-      name,
-      userName,
-      mail,
-      UserLevel.ADMIN,
-    );
+    return await this.userService
+      .register(name, userName, mail, UserLevel.ADMIN)
+      .catch((e: Error) => e);
   }
 
   @Mutation(() => User, { nullable: true })
   async toggleBookmark(
-    @Args('userId') userId: string,
     @Args('tutorialId') tutorialId: string,
+    @Context() context: any,
   ) {
-    return await this.userService.toggleBookmark(userId, tutorialId);
+    return await this.userService.toggleBookmark(
+      context.req.header('userID'),
+      tutorialId,
+    );
   }
 }

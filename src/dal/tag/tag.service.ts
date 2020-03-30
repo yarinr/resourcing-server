@@ -23,7 +23,7 @@ export class TagService {
   }
 
   async getTag(name: string): Promise<Tag> {
-    return await this.tagRepository.findOne(name);
+    return await this.tagRepository.findOne(name, { relations: ['tutorials'] });
   }
 
   async createTag(name: string): Promise<Tag> {
@@ -32,12 +32,14 @@ export class TagService {
     if (tagExist) {
       return tagExist;
     }
-    return await this.tagRepository.save(tag);
+    await this.tagRepository.save(tag);
+    return await this.getTag(tag.name);
   }
 
   async getTagsByStatus(status: ApprovalStatus): Promise<Tag[]> {
     return await this.tagRepository
-      .createQueryBuilder()
+      .createQueryBuilder('tag')
+      .leftJoinAndSelect('tag.tutorials', 'tutorial')
       .where('tag.approvalStatusCode = :status', { status })
       .getMany();
   }

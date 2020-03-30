@@ -13,6 +13,10 @@ import { Tutorial } from '../tutorial/tutorial.entity';
 @ObjectType()
 @Entity()
 export class Comment {
+  constructor(content: string) {
+    this.content = content;
+  }
+
   @Field(type => ID)
   @PrimaryGeneratedColumn()
   id: string;
@@ -21,13 +25,15 @@ export class Comment {
   @ManyToOne(
     type => User,
     user => user.comments,
+    { cascade: true, eager: true },
   )
   user: User;
 
   @Field(type => Tutorial)
-  @OneToMany(
+  @ManyToOne(
     type => Tutorial,
     tutorial => tutorial.comments,
+    { cascade: true, eager: true },
   )
   tutorial: Tutorial;
 

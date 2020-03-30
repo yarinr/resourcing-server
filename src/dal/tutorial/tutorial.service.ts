@@ -3,35 +3,27 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tutorial } from 'src/dal/tutorial/tutorial.entity';
 import { Tag } from '../tag/tag.entity';
-import { ApprovalStatus } from '../utils.entity';
+import { ApprovalStatus, VoteType } from '../utils.entity';
 import { TagService } from '../tag/tag.service';
 import { UserService } from '../user/user.service';
 
 @Injectable()
 export class TutorialService {
+  private readonly relations = { relations: ['comments', 'votes'] };
   constructor(
     @InjectRepository(Tutorial)
     private readonly tutorialRepository: Repository<Tutorial>,
     private userService: UserService,
     private tagService: TagService,
-  ) {
-    // const tutorial = new Tutorial(
-    //   'python4beginners',
-    //   'https://www.python.org/about/gettingstarted/',
-    //   'learn python quickly',
-    // );
-    // const tag1 = new Tag('Python');
-    // tutorial.tags = [tag1];
-    // this.tutorialRepository.save(tutorial);
-  }
+  ) {}
 
-  // Quereis
+  // Queries
   async getAllTutorials() {
-    return await this.tutorialRepository.find();
+    return await this.tutorialRepository.find(this.relations);
   }
 
   async getTutorialbyId(id: string): Promise<Tutorial> {
-    return await this.tutorialRepository.findOne(id);
+    return await this.tutorialRepository.findOne(id, this.relations);
   }
 
   // mutations
@@ -68,7 +60,8 @@ export class TutorialService {
       }
       tutorial.tags = tags;
       tutorial.user = user;
-      return await this.tutorialRepository.save(tutorial);
+      await this.tutorialRepository.save(tutorial);
+      return await this.getTutorialbyId(tutorial.id);
     }
   }
 
@@ -77,5 +70,15 @@ export class TutorialService {
       throw JSON.stringify(e);
     });
     return 'delete succesfull';
+  }
+
+  async calculateScore(tutorialId: string): Promise<number> {
+    const score: number = await (
+      await this.getTutorialbyId(tutorialId)
+    ).votes?.reduce((voteAcc: number, vote) => {
+      return (voteAcc =
+        vote.type === VoteType.Upvote ? voteAcc + 1 : voteAcc - 1);
+    }, 0);
+    return score ? score : 0;
   }
 }

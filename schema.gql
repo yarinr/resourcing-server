@@ -31,23 +31,25 @@ scalar DateTime
 type Mutation {
   updateTutorialStatus(status: String!, id: String!): Tutorial!
   addTutorial(tags: [String!]!, desc: String!, url: String!, title: String!): Tutorial!
-  deletTutorial(id: String!): String!
+  deleteTutorial(id: String!): String!
   createTopic(category: String!, icon: String!, name: String!): Topic!
   updateTopicStatus(status: String!, topicName: String!): Topic!
   registerUser(mail: String!, userName: String!, name: String!): User!
   addNewAdmin(mail: String!, userName: String!, name: String!): User!
-  toggleBookmark(tutorialId: String!, userId: String!): User
+  toggleBookmark(tutorialId: String!): User
   createTag(tagName: String!): Tag!
   updateTagStatus(status: String!, tagName: String!): Tag!
+  addVote(tutorialId: String!, voteType: String!): Vote!
+  removeVote(voteId: String!): Vote!
+  addNewComment(tutorialId: String!, content: String!): Comment!
+  deleteComment(id: String!): String!
 }
 
 type Query {
   tutorials: [Tutorial!]!
   tutorialById(id: String!): Tutorial!
-  tutorial: Tutorial!
   topics: [Topic!]!
   topicByName(topicName: String!): Topic
-  tutorialsByTag(tagName: String!): [Tutorial!]
   TopicsByStatus(status: String!): [Topic!]
   TopicsByCategory(category: String!): [Topic!]
   users: [User!]!
@@ -55,6 +57,13 @@ type Query {
   tags: [Tag!]!
   TagsByName(tagName: String!): Tag
   TagsByStatus(status: String!): [Tag!]
+  tutorialsByTag(tagName: String!): [Tutorial!]
+  votes: [Vote!]!
+  userVoteHistory(userId: String!): [Vote!]
+  getVoteById(voteId: String!): Vote
+  getTutorialVotes(tutorialId: String!): [Vote!]!
+  comments: [Comment!]!
+  commentById(id: String!): Comment!
 }
 
 type Tag {
@@ -67,7 +76,6 @@ type Topic {
   name: String!
   icon: String!
   category: Category!
-  tutorials: [Tutorial!]
   approvalStatusCode: ApprovalStatus!
 }
 
@@ -84,6 +92,7 @@ type Tutorial {
   user: User!
   tags: [Tag!]!
   approvalStatusCode: ApprovalStatus!
+  bookmarked: [User!]
 }
 
 type User {
@@ -92,8 +101,8 @@ type User {
   userName: String!
   mail: String!
   tutorials: [Tutorial!]
-  comments: [Comment!]!
-  bookmarks: [Tutorial!]!
+  comments: [Comment!]
+  bookmarks: [Tutorial!]
   votes: [Vote!]!
   score: Int!
   userLevel: UserLevel!

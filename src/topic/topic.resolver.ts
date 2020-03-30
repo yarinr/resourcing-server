@@ -19,12 +19,6 @@ export class TopicResolver {
     return await this.topicService.getTopic(topicName);
   }
 
-  @Query(returns => [Tutorial], { nullable: true })
-  async tutorialsByTag(@Args('tagName') tagName: string) {
-    const topic = await this.topicService.getTopic(tagName);
-    return topic.tutorials;
-  }
-
   @Query(returns => [Topic], { nullable: true })
   async TopicsByStatus(@Args('status') status: ApprovalStatus) {
     return await this.topicService.getTopicsByStatus(status);
