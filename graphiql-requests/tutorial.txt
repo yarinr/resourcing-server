@@ -181,3 +181,37 @@ mutation updateTutorialStatus {
 mutation deleteTutorial {
   deleteTutorial(id: "1")
 }
+
+mutation addView{
+  updateTutorialViews(id: "1"){
+    id
+    title
+    url
+    description
+    submittedAt
+    score
+    views
+    approvalStatusCode
+    user {
+      id
+      userName
+    }
+    comments {
+      id
+      content
+      user {
+        id
+      }
+    }
+    votes {
+      id
+      type
+      user{
+        id
+      }
+    }
+    tags {
+      name
+    }
+  }
+}

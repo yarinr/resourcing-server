@@ -72,6 +72,14 @@ export class TutorialService {
     return 'delete succesfull';
   }
 
+  async incTutorialViews(id: string): Promise<Tutorial> {
+    const tutorial = await this.getTutorialbyId(id);
+    await this.tutorialRepository.update(id, {
+      views: tutorial.views + 1,
+    });
+    return await this.getTutorialbyId(id);
+  }
+
   async calculateScore(tutorialId: string): Promise<number> {
     const score: number = await (
       await this.getTutorialbyId(tutorialId)
