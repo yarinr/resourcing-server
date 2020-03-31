@@ -41,6 +41,11 @@ export class UserResolver {
     return await this.userService.getAllUsers();
   }
 
+  @Query(returns => User)
+  async getCurrentUser(@Context() context: any) {
+    return await this.userService.getUser(context.req.header('userID'));
+  }
+
   @Query(returns => User, { nullable: true })
   async userById(@Args('userId') userId: string) {
     return await this.userService.getUser(userId);
