@@ -57,6 +57,11 @@ export class TutorialResolver {
     );
   }
 
+  @Mutation(() => Tutorial)
+  async updateTutorialViews(@Args('id') id: string) {
+    return await this.tutorialService.incTutorialViews(id);
+  }
+
   @Mutation(returns => String)
   async deleteTutorial(@Args('id') id: string) {
     return this.tutorialService.deleteTutorial(id);

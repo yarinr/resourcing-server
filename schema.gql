@@ -31,6 +31,7 @@ scalar DateTime
 type Mutation {
   updateTutorialStatus(status: String!, id: String!): Tutorial!
   addTutorial(tags: [String!]!, desc: String!, url: String!, title: String!): Tutorial!
+  updateTutorialViews(id: String!): Tutorial!
   deleteTutorial(id: String!): String!
   createTopic(category: String!, icon: String!, name: String!): Topic!
   updateTopicStatus(status: String!, topicName: String!): Topic!
