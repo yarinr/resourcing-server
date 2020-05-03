@@ -1,6 +1,6 @@
 pipeline {
     environment {
-        IMAGE_NAME = "gaya902008/resourcing-client:${BUILD_NUMBER}"
+        IMAGE_NAME = "gaya902008/resourcing-server:${BUILD_NUMBER}"
         DOCKERHUB_USER = "gaya902008"
         DOCKERHUB_PASS = credentials('dockerhub_pass')
         NAMESPACE = "diamond"
