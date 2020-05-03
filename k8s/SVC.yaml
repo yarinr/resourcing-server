@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: resourcing-server-service
+spec:
+  selector:
+    app: resourcing-server
+  ports:
+    - port: 3000
+      targetPort: 80

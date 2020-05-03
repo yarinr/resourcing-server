@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: resourcing-server-route
+spec:
+  rules:
+    - host: resourcing-server.owls.shlomke.xyz #change dummy-hello-world to your project name
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: resourcing-server-service
+              servicePort: 3000

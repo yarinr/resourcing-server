@@ -54,6 +54,7 @@ type Query {
   TopicsByStatus(status: String!): [Topic!]
   TopicsByCategory(category: String!): [Topic!]
   users: [User!]!
+  getCurrentUser: User!
   userById(userId: String!): User
   tags: [Tag!]!
   TagsByName(tagName: String!): Tag
