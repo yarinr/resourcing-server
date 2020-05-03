@@ -6,5 +6,5 @@ spec:
   selector:
     app: resourcing-server
   ports:
-    - port: 3000
-      targetPort: 80
+    - port: 4000
+      targetPort: 4000

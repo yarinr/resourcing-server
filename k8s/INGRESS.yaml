@@ -10,4 +10,4 @@ spec:
           - path: /
             backend:
               serviceName: resourcing-server-service
-              servicePort: 3000
+              servicePort: 4000

@@ -16,4 +16,4 @@ spec:
       - name: resourcing-server
         image: gaya902008/resourcing-server:BUILDNUM 
         ports: 
-        - containerPort: 80
+        - containerPort: 4000
