@@ -35,7 +35,7 @@
     "rxjs": "^6.5.3",
     "sqlite3": "^4.1.1",
     "type-graphql": "^0.17.6",
-    "typeorm": "^0.2.22",
+    "typeorm": "^0.2.25",
     "uuid": "^7.0.2"
   },
   "devDependencies": {
